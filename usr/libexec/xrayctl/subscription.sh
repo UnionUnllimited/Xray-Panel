@@ -28,6 +28,7 @@ xr_choose_user_agent() {
   echo "4) mihomo"
   echo "5) v2rayN"
   echo "6) browser"
+  echo "7) AtlantaWall"
   printf 'Выбор: '
   read -r ua_pick
   case "$ua_pick" in
@@ -37,6 +38,7 @@ xr_choose_user_agent() {
     4) echo "mihomo" ;;
     5) echo "v2rayN" ;;
     6) echo "Mozilla/5.0" ;;
+    7) echo "AtlantaWall" ;;
     *) echo "clash" ;;
   esac
 }
@@ -52,6 +54,7 @@ xr_update_subscription() {
 
   local ua
   ua="$(xr_choose_user_agent)"
+  XRAYCTL_USER_AGENT="$ua"
 
   if ! xr_require_cmd curl; then
     xr_log "curl не найден, обновление невозможно."
@@ -154,11 +157,13 @@ xr_is_http_url() {
 
 xr_fetch_url() {
   local url="$1"
+  local ua
+  ua="${XRAYCTL_USER_AGENT:-xrayctl}"
   if ! xr_require_cmd curl; then
     return 0
   fi
   curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
-    -H "User-Agent: xrayctl" "$url"
+    -H "User-Agent: $ua" "$url"
 }
 
 xr_contains_links() {
@@ -238,6 +243,13 @@ xr_write_outbounds_from_json() {
   local tmp_file
   tmp_file="$(mktemp)"
 
+  if printf '%s' "$data" | grep -q '^\s*\[' && xr_require_cmd jsonfilter; then
+    if xr_outbounds_from_config_list "$data" "$tmp_file"; then
+      xr_write_atomic "$tmp_file" "$XRAYCTL_OUTBOUNDS_FILE"
+      return 0
+    fi
+  fi
+
   if printf '%s' "$data" | grep -q '"outbounds"' && xr_require_cmd jsonfilter; then
     jsonfilter -e '@.outbounds' <<EOF_JSON > "$tmp_file"
 $data
@@ -259,6 +271,126 @@ EOF_JSON
   fi
 
   rm -f "$tmp_file"
+  return 1
+}
+
+xr_outbounds_from_config_list() {
+  local data="$1"
+  local output_file="$2"
+  local found="0"
+
+  printf '[\n' > "$output_file"
+  local first="yes"
+  local i=0
+  while [ "$i" -lt 50 ]; do
+    local remarks
+    remarks="$(jsonfilter -e "@[$i].remarks" <<EOF_JSON
+$data
+EOF_JSON
+)"
+    if [ -z "$remarks" ]; then
+      i=$((i + 1))
+      continue
+    fi
+
+    local j=0
+    while [ "$j" -lt 20 ]; do
+      local tag protocol
+      tag="$(jsonfilter -e "@[$i].outbounds[$j].tag" <<EOF_JSON
+$data
+EOF_JSON
+)"
+      protocol="$(jsonfilter -e "@[$i].outbounds[$j].protocol" <<EOF_JSON
+$data
+EOF_JSON
+)"
+      if [ "$tag" = "proxy" ] && [ "$protocol" = "vless" ]; then
+        local address port uuid flow network security sni public_key fingerprint
+        address="$(jsonfilter -e "@[$i].outbounds[$j].settings.vnext[0].address" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        port="$(jsonfilter -e "@[$i].outbounds[$j].settings.vnext[0].port" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        uuid="$(jsonfilter -e "@[$i].outbounds[$j].settings.vnext[0].users[0].id" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        flow="$(jsonfilter -e "@[$i].outbounds[$j].settings.vnext[0].users[0].flow" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        network="$(jsonfilter -e "@[$i].outbounds[$j].streamSettings.network" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        security="$(jsonfilter -e "@[$i].outbounds[$j].streamSettings.security" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        sni="$(jsonfilter -e "@[$i].outbounds[$j].streamSettings.realitySettings.serverName" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        public_key="$(jsonfilter -e "@[$i].outbounds[$j].streamSettings.realitySettings.publicKey" <<EOF_JSON
+$data
+EOF_JSON
+)"
+        fingerprint="$(jsonfilter -e "@[$i].outbounds[$j].streamSettings.realitySettings.fingerprint" <<EOF_JSON
+$data
+EOF_JSON
+)"
+
+        if [ -n "$address" ] && [ -n "$port" ] && [ -n "$uuid" ]; then
+          if [ "$first" = "yes" ]; then
+            first="no"
+          else
+            printf ',\n' >> "$output_file"
+          fi
+          found="1"
+          cat <<EOF_OUT >> "$output_file"
+  {
+    "tag": "$(xr_json_escape "$remarks")",
+    "protocol": "vless",
+    "settings": {
+      "vnext": [
+        {
+          "address": "$(xr_json_escape "$address")",
+          "port": $port,
+          "users": [
+            {
+              "id": "$(xr_json_escape "$uuid")",
+              "encryption": "none",
+              "flow": "$(xr_json_escape "$flow")"
+            }
+          ]
+        }
+      ]
+    },
+    "streamSettings": {
+      "network": "$(xr_json_escape "${network:-tcp}")",
+      "security": "$(xr_json_escape "${security:-none}")",
+      "realitySettings": {
+        "serverName": "$(xr_json_escape "$sni")",
+        "publicKey": "$(xr_json_escape "$public_key")",
+        "fingerprint": "$(xr_json_escape "$fingerprint")"
+      }
+    }
+  }
+EOF_OUT
+        fi
+      fi
+      j=$((j + 1))
+    done
+    i=$((i + 1))
+  done
+
+  printf '\n]\n' >> "$output_file"
+  if [ "$found" = "1" ]; then
+    return 0
+  fi
   return 1
 }
 
