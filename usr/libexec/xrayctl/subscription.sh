@@ -53,7 +53,13 @@ xr_update_subscription() {
   fi
 
   local ua
-  ua="$(xr_choose_user_agent)"
+  ua="$(xr_get_uci subscription.user_agent)"
+  if [ -z "$ua" ]; then
+    case "$sub_url" in
+      *atlanta-subs.ru*) ua="AtlantaWall" ;;
+      *) ua="$(xr_choose_user_agent)" ;;
+    esac
+  fi
   XRAYCTL_USER_AGENT="$ua"
 
   if ! xr_require_cmd curl; then
