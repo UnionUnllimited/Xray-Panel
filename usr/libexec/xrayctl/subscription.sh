@@ -59,9 +59,12 @@ xr_update_subscription() {
   fi
 
   local sub_data
-  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 -H "User-Agent: $ua" "$sub_url")"
+  xr_log "Загрузка подписки..."
+  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+    -H "User-Agent: $ua" "$sub_url")"
   if [ -z "$sub_data" ]; then
     xr_log "Не удалось загрузить подписку."
+    xr_log "Проверьте доступность URL, DNS и подключение к интернету."
     return 1
   fi
 
@@ -154,7 +157,8 @@ xr_convert_subscription() {
 
   if xr_contains_clash "$normalized"; then
     xr_log "Обнаружен Clash/YAML. Используем subconverter."
-    links_data="$(curl -fsSL -H "User-Agent: xrayctl" \
+    links_data="$(curl -fsSL --connect-timeout 5 --max-time 30 --retry 2 --retry-delay 2 \
+      -H "User-Agent: xrayctl" \
       "${subconverter_url}?target=v2ray&url=${sub_url}&list=true")"
     if [ -z "$links_data" ]; then
       xr_log "subconverter не вернул данные."
