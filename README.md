@@ -61,6 +61,14 @@ curl -fsSL https://raw.githubusercontent.com/UnionUnllimited/Xray-Panel/codex/cr
 REPO_URL="https://github.com/UnionUnllimited/Xray-Panel" REF="codex/create-ssh-control-panel-for-xray" sh -c "$(curl -fsSL https://raw.githubusercontent.com/UnionUnllimited/Xray-Panel/codex/create-ssh-control-panel-for-xray/install.sh)"
 ```
 
+Если подписка не парсится, проверьте ответ напрямую:
+
+```sh
+curl -vL --connect-timeout 10 --max-time 30 "https://your-subscription.example/your-token"
+```
+
+Для JSON с `outbounds` требуется `jsonfilter` (устанавливается автоматически в `install.sh`).
+
 ## Полное удаление (для тестов)
 
 ```sh

@@ -41,6 +41,10 @@ if command -v opkg >/dev/null 2>&1; then
       opkg install xray >/dev/null 2>&1 || true
     fi
   fi
+  if ! command -v jsonfilter >/dev/null 2>&1; then
+    echo "[xrayctl] Установка jsonfilter (opkg)"
+    opkg install jsonfilter >/dev/null 2>&1 || true
+  fi
 fi
 
 echo "[xrayctl] Установка завершена."
