@@ -30,7 +30,7 @@ xrayctl
 
 ```sh
 opkg update
-opkg install curl ca-bundle
+opkg install curl ca-bundle jq
 ```
 
 3) Запустите установку:
@@ -67,7 +67,7 @@ REPO_URL="https://github.com/UnionUnllimited/Xray-Panel" REF="codex/create-ssh-c
 curl -vL --connect-timeout 10 --max-time 30 "https://your-subscription.example/your-token"
 ```
 
-Для JSON с `outbounds` требуется `jsonfilter` (устанавливается автоматически в `install.sh`).
+Для обновления подписок и сборки конфига требуется `jq` (устанавливается автоматически в `install.sh`).
 
 Если провайдер требует специальный заголовок, добавьте его в UCI и повторите обновление подписки:
 
@@ -84,14 +84,14 @@ curl -fsSL https://raw.githubusercontent.com/UnionUnllimited/Xray-Panel/codex/cr
 
 ## Формат outbounds.json
 
-Файл должен содержать **JSON array** из outbound-объектов Xray. Каждый outbound должен иметь тег `proxy`, чтобы работал балансер.
+Файл должен содержать **JSON array** из outbound-объектов Xray. Каждый outbound должен иметь уникальный `tag`, а балансер использует список всех тегов.
 
 Пример:
 
 ```json
 [
   {
-    "tag": "proxy",
+    "tag": "node_1",
     "protocol": "vless",
     "settings": {
       "vnext": [
@@ -127,10 +127,4 @@ Cron управляется через меню, записи помечены `
 
 ## Подписки
 
-Панель ожидает локальный subconverter, доступный по `http://127.0.0.1:25500/sub` (можно изменить в `/etc/config/xrayctl`).
-Если подписка содержит `proxies:` или `proxy-groups:`, она будет отправлена в subconverter (target=v2ray) и преобразована в ссылки `vless://`, `vmess://`, `trojan://`.
-Далее панель конвертирует эти ссылки в `outbounds.json`. Для `vmess://` требуется `jsonfilter`.
-
-## Примечание
-
-Проект — скелет/основа. Для работы подписок требуется локальный subconverter, который должен отдавать список `vless://` и/или готовый JSON outbounds.
+Подписка загружается как base64, декодируется и фильтруется по строкам `vless://`. Далее панель строит `outbounds.json` и сразу пересобирает `config.json` с балансером по всем нодам.
