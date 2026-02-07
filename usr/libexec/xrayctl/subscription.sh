@@ -67,10 +67,21 @@ xr_update_subscription() {
     return 1
   fi
 
+  local header_extra
+  header_extra="$(xr_get_uci subscription.header)"
+  if [ -n "$header_extra" ]; then
+    xr_log "Доп. заголовок: $header_extra"
+  fi
+
   local sub_data
   xr_log "Загрузка подписки..."
-  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
-    -H "User-Agent: $ua" "$sub_url")"
+  if [ -n "$header_extra" ]; then
+    sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" -H "$header_extra" "$sub_url")"
+  else
+    sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" "$sub_url")"
+  fi
   if [ -z "$sub_data" ]; then
     xr_log "Не удалось загрузить подписку."
     xr_log "Проверьте доступность URL, DNS и подключение к интернету."
@@ -165,11 +176,18 @@ xr_fetch_url() {
   local url="$1"
   local ua
   ua="${XRAYCTL_USER_AGENT:-xrayctl}"
+  local header_extra
+  header_extra="$(xr_get_uci subscription.header)"
   if ! xr_require_cmd curl; then
     return 0
   fi
-  curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
-    -H "User-Agent: $ua" "$url"
+  if [ -n "$header_extra" ]; then
+    curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" -H "$header_extra" "$url"
+  else
+    curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" "$url"
+  fi
 }
 
 xr_contains_links() {

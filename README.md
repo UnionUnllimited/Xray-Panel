@@ -69,6 +69,13 @@ curl -vL --connect-timeout 10 --max-time 30 "https://your-subscription.example/y
 
 Для JSON с `outbounds` требуется `jsonfilter` (устанавливается автоматически в `install.sh`).
 
+Если провайдер требует специальный заголовок, добавьте его в UCI и повторите обновление подписки:
+
+```sh
+uci set xrayctl.subscription.header='User-Agent: AtlantaWall'
+uci commit xrayctl
+```
+
 ## Полное удаление (для тестов)
 
 ```sh
