@@ -45,6 +45,10 @@ if command -v opkg >/dev/null 2>&1; then
     echo "[xrayctl] Установка jsonfilter (opkg)"
     opkg install jsonfilter >/dev/null 2>&1 || true
   fi
+  if ! command -v jq >/dev/null 2>&1; then
+    echo "[xrayctl] Установка jq (opkg)"
+    opkg install jq >/dev/null 2>&1 || true
+  fi
 fi
 
 echo "[xrayctl] Установка завершена."

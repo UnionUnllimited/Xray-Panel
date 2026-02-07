@@ -62,51 +62,208 @@ xr_update_subscription() {
   fi
   XRAYCTL_USER_AGENT="$ua"
 
-  if ! xr_require_cmd curl; then
-    xr_log "curl не найден, обновление невозможно."
-    return 1
-  fi
-
   local header_extra
   header_extra="$(xr_get_uci subscription.header)"
   if [ -n "$header_extra" ]; then
     xr_log "Доп. заголовок: $header_extra"
   fi
 
-  local sub_data
+  if ! xr_require_cmd curl; then
+    xr_log "curl не найден, обновление невозможно."
+    return 1
+  fi
+
+  if ! xr_require_cmd base64; then
+    xr_log "base64 не найден, обновление невозможно."
+    return 1
+  fi
+
+  if ! xr_require_cmd jq; then
+    xr_log "jq не найден, обновление невозможно."
+    return 1
+  fi
+
+  local tmp_raw tmp_txt tmp_json tmp_json_new
+  tmp_raw="$(mktemp)"
+  tmp_txt="$(mktemp)"
+  tmp_json="$(mktemp)"
+  tmp_json_new="$(mktemp)"
+
   xr_log "Загрузка подписки..."
   if [ -n "$header_extra" ]; then
-    sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
-      -H "User-Agent: $ua" -H "$header_extra" "$sub_url")"
+    curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" -H "$header_extra" "$sub_url" -o "$tmp_raw"
   else
-    sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
-      -H "User-Agent: $ua" "$sub_url")"
+    curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+      -H "User-Agent: $ua" "$sub_url" -o "$tmp_raw"
   fi
-  if [ -z "$sub_data" ]; then
+  if [ ! -s "$tmp_raw" ]; then
     xr_log "Не удалось загрузить подписку."
     xr_log "Проверьте доступность URL, DNS и подключение к интернету."
+    rm -f "$tmp_raw" "$tmp_txt" "$tmp_json" "$tmp_json_new"
     return 1
   fi
 
   xr_log "Подписка загружена."
   xr_log "Сохранение данных в $XRAYCTL_ETC_DIR/subscription.raw"
-  printf '%s\n' "$sub_data" > "$XRAYCTL_ETC_DIR/subscription.raw"
+  cp "$tmp_raw" "$XRAYCTL_ETC_DIR/subscription.raw"
 
-  if xr_convert_subscription "$sub_url" "$sub_data"; then
-    xr_log "Подписка преобразована в outbounds."
-  else
-    xr_log "Не удалось преобразовать подписку."
+  base64 -d "$tmp_raw" 2>/dev/null | tr -d '\r' | grep -E '^vless://' > "$tmp_txt" || true
+  if [ ! -s "$tmp_txt" ]; then
+    xr_log "Нет vless:// после декодирования base64."
+    rm -f "$tmp_raw" "$tmp_txt" "$tmp_json" "$tmp_json_new"
+    return 1
   fi
 
-  if [ -f "$XRAYCTL_OUTBOUNDS_FILE" ]; then
-    local node_count
-    node_count="$(grep -c '"protocol"' "$XRAYCTL_OUTBOUNDS_FILE" 2>/dev/null || true)"
-    xr_log "Нод в outbounds: ${node_count:-0}"
-    if [ "${node_count:-0}" -eq 0 ]; then
-      xr_log "Ноды не найдены. Проверьте $XRAYCTL_ETC_DIR/subscription.raw"
-      xr_log "Поддерживаются vless/vmess/trojan; для vmess нужен пакет jsonfilter."
+  printf '[]\n' > "$tmp_json"
+  local i
+  i=0
+
+  while IFS= read -r line; do
+    i=$((i + 1))
+
+    local uri name query uuid hp host port security net flow sni fp pbk sid
+    uri="${line#vless://}"
+
+    name=""
+    case "$uri" in
+      *"#"*)
+        name="${uri#*#}"
+        uri="${uri%%#*}"
+        name="$(xr_url_decode "$name")"
+        ;;
+    esac
+
+    query=""
+    case "$uri" in
+      *"?"*)
+        query="${uri#*\?}"
+        uri="${uri%%\?*}"
+        ;;
+    esac
+
+    uuid="${uri%@*}"
+    hp="${uri#*@}"
+    host="${hp%:*}"
+    port="${hp##*:}"
+
+    if [ -z "$uuid" ] || [ -z "$host" ] || [ -z "$port" ]; then
+      xr_log "Пропуск некорректной ссылки vless://"
+      continue
     fi
+
+    security=""
+    net="tcp"
+    flow=""
+    sni=""
+    fp="random"
+    pbk=""
+    sid=""
+
+    local oldIFS
+    oldIFS="$IFS"
+    IFS="&"
+    for kv in $query; do
+      local key value
+      key="${kv%%=*}"
+      value="${kv#*=}"
+      value="$(xr_url_decode "$value")"
+      case "$key" in
+        security) security="$value" ;;
+        type) net="$value" ;;
+        flow) flow="$value" ;;
+        sni) sni="$value" ;;
+        fp) fp="$value" ;;
+        pbk) pbk="$value" ;;
+        sid) sid="$value" ;;
+      esac
+    done
+    IFS="$oldIFS"
+
+    local tag remark node_json
+    tag="node_$i"
+    remark="$name"
+    [ -n "$remark" ] || remark="$tag"
+
+    node_json="$(jq -n \
+      --arg tag "$tag" \
+      --arg remark "$remark" \
+      --arg host "$host" \
+      --argjson port "$port" \
+      --arg uuid "$uuid" \
+      --arg flow "$flow" \
+      --arg security "$security" \
+      --arg net "$net" \
+      --arg sni "$sni" \
+      --arg fp "$fp" \
+      --arg pbk "$pbk" \
+      --arg sid "$sid" \
+      '
+      def add_flow:
+        if ($flow|length) > 0 then . + {flow:$flow} else . end;
+
+      def mk_reality:
+        {
+          show:false,
+          fingerprint:(if ($fp|length)>0 then $fp else "random" end),
+          serverName:$sni,
+          publicKey:$pbk,
+          shortId:$sid
+        };
+
+      {
+        tag: $tag,
+        protocol: "vless",
+        settings: {
+          vnext: [{
+            address: $host,
+            port: $port,
+            users: [ ( {id:$uuid, encryption:"none"} | add_flow ) ]
+          }]
+        },
+        streamSettings:
+          (
+            if ($net|length)>0 then
+              {
+                network:$net,
+                security:(if ($security|length)>0 then $security else "none" end)
+              }
+            else
+              { network:"tcp", security:(if ($security|length)>0 then $security else "none" end) }
+            end
+            | if $security=="reality" then . + {realitySettings: mk_reality} else . end
+          )
+      }
+      ')"
+
+    jq --argjson node "$node_json" '. + [$node]' "$tmp_json" > "$tmp_json_new" \
+      && mv "$tmp_json_new" "$tmp_json"
+  done < "$tmp_txt"
+
+  local node_count
+  node_count="$(jq length "$tmp_json" 2>/dev/null || echo 0)"
+  if [ "${node_count:-0}" -eq 0 ]; then
+    xr_log "Ноды не найдены. Проверьте $XRAYCTL_ETC_DIR/subscription.raw"
+    rm -f "$tmp_raw" "$tmp_txt" "$tmp_json" "$tmp_json_new"
+    return 1
   fi
+
+  xr_write_atomic "$tmp_json" "$XRAYCTL_OUTBOUNDS_FILE"
+  xr_log "Нод в outbounds: ${node_count:-0}"
+
+  rm -f "$tmp_raw" "$tmp_txt" "$tmp_json_new"
+
+  xr_build_config
+
+  if command -v xr_restart_xray >/dev/null 2>&1; then
+    xr_restart_xray
+  elif [ -x /etc/init.d/xray ]; then
+    /etc/init.d/xray restart || true
+  fi
+}
+
+xr_url_decode() {
+  printf '%b' "$(printf '%s' "$1" | sed 's/+/ /g; s/%/\\x/g')"
 }
 
 xr_show_nodes() {

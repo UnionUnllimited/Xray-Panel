@@ -17,10 +17,20 @@ xr_build_config() {
     xr_die "Ноды отсутствуют, Xray не стартует."
   fi
 
+  if ! xr_require_cmd jq; then
+    xr_die "jq не найден, сборка конфига невозможна."
+  fi
+
   local nodes_trimmed
   nodes_trimmed="$(printf '%s' "$nodes_raw" | sed '1s/^\[//; $s/\]$//')"
   if [ -z "$(printf '%s' "$nodes_trimmed" | tr -d ' \n\t')" ]; then
     xr_die "Ноды отсутствуют, Xray не стартует."
+  fi
+
+  local selector_json
+  selector_json="$(jq -r '.[].tag' "$XRAYCTL_OUTBOUNDS_FILE" | jq -R . | jq -s .)"
+  if [ -z "$selector_json" ] || [ "$selector_json" = "null" ] || [ "$selector_json" = "[]" ]; then
+    xr_die "Не удалось определить теги нод."
   fi
 
   local strategy
@@ -76,7 +86,7 @@ EOF_CONF
     }
   ],
   "observatory": {
-    "subjectSelector": ["proxy"],
+    "subjectSelector": $selector_json,
     "probeUrl": "$probe_url",
     "probeInterval": "$probe_interval"
   },
@@ -85,7 +95,7 @@ EOF_CONF
     "balancers": [
       {
         "tag": "balancer",
-        "selector": ["proxy"],
+        "selector": $selector_json,
         "strategy": {
           "type": "$strategy"
         }
