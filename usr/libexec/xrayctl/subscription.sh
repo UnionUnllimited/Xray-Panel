@@ -114,7 +114,7 @@ xr_normalize_subscription_payload() {
     return 0
   fi
 
-  if xr_contains_links "$payload" || xr_contains_clash "$payload"; then
+  if xr_contains_links "$payload" || xr_contains_clash "$payload" || xr_contains_json_outbounds "$payload"; then
     printf '%s' "$payload"
     return 0
   fi
@@ -122,7 +122,7 @@ xr_normalize_subscription_payload() {
   if xr_require_cmd base64; then
     local decoded
     decoded="$(xr_base64_decode "$payload")"
-    if xr_contains_links "$decoded" || xr_contains_clash "$decoded"; then
+    if xr_contains_links "$decoded" || xr_contains_clash "$decoded" || xr_contains_json_outbounds "$decoded"; then
       printf '%s' "$decoded"
       return 0
     fi
@@ -140,6 +140,11 @@ xr_contains_links() {
 xr_contains_clash() {
   printf '%s' "$1" | grep -q 'proxies:' \
     || printf '%s' "$1" | grep -q 'proxy-groups:'
+}
+
+xr_contains_json_outbounds() {
+  printf '%s' "$1" | grep -q '"protocol"' \
+    && (printf '%s' "$1" | grep -q '"outbounds"' || printf '%s' "$1" | grep -q '^\s*\[')
 }
 
 xr_convert_subscription() {
@@ -183,12 +188,48 @@ xr_convert_subscription() {
     fi
   fi
 
+  if xr_contains_json_outbounds "$links_data"; then
+    xr_log "Обнаружен JSON с outbounds."
+    if xr_write_outbounds_from_json "$links_data"; then
+      return 0
+    fi
+  fi
+
   if ! xr_contains_links "$links_data"; then
     xr_log "В подписке нет vless/vmess/trojan ссылок."
     return 1
   fi
 
   xr_links_to_outbounds "$links_data"
+}
+
+xr_write_outbounds_from_json() {
+  local data="$1"
+  local tmp_file
+  tmp_file="$(mktemp)"
+
+  if printf '%s' "$data" | grep -q '"outbounds"' && xr_require_cmd jsonfilter; then
+    jsonfilter -e '@.outbounds' <<EOF_JSON > "$tmp_file"
+$data
+EOF_JSON
+    if [ -s "$tmp_file" ]; then
+      xr_write_atomic "$tmp_file" "$XRAYCTL_OUTBOUNDS_FILE"
+      return 0
+    fi
+  fi
+
+  if printf '%s' "$data" | grep -q '"outbounds"' && ! xr_require_cmd jsonfilter; then
+    xr_log "Для JSON с outbounds нужен пакет jsonfilter."
+  fi
+
+  if printf '%s' "$data" | grep -q '^\s*\['; then
+    printf '%s\n' "$data" > "$tmp_file"
+    xr_write_atomic "$tmp_file" "$XRAYCTL_OUTBOUNDS_FILE"
+    return 0
+  fi
+
+  rm -f "$tmp_file"
+  return 1
 }
 
 xr_base64_decode() {
