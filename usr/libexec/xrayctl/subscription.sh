@@ -114,6 +114,16 @@ xr_normalize_subscription_payload() {
     return 0
   fi
 
+  local trimmed
+  trimmed="$(xr_trim_payload "$payload")"
+  if xr_is_http_url "$trimmed"; then
+    local fetched
+    fetched="$(xr_fetch_url "$trimmed")"
+    if [ -n "$fetched" ]; then
+      payload="$fetched"
+    fi
+  fi
+
   if xr_contains_links "$payload" || xr_contains_clash "$payload" || xr_contains_json_outbounds "$payload"; then
     printf '%s' "$payload"
     return 0
@@ -129,6 +139,26 @@ xr_normalize_subscription_payload() {
   fi
 
   printf '%s' "$payload"
+}
+
+xr_trim_payload() {
+  printf '%s' "$1" | tr -d '\r' | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+xr_is_http_url() {
+  case "$1" in
+    http://*|https://*) return 0 ;;
+    *) return 1 ;;
+  esac
+}
+
+xr_fetch_url() {
+  local url="$1"
+  if ! xr_require_cmd curl; then
+    return 0
+  fi
+  curl -fsSL --connect-timeout 10 --max-time 60 --retry 2 --retry-delay 2 \
+    -H "User-Agent: xrayctl" "$url"
 }
 
 xr_contains_links() {
