@@ -33,5 +33,15 @@ cp -r "$SRC_DIR/etc/"* /etc/
 
 chmod +x /usr/bin/xrayctl /usr/libexec/xrayctl/*.sh
 
+if command -v opkg >/dev/null 2>&1; then
+  if ! command -v xray >/dev/null 2>&1; then
+    echo "[xrayctl] Установка xray-core (opkg)"
+    opkg update >/dev/null 2>&1 || true
+    if ! opkg install xray-core >/dev/null 2>&1; then
+      opkg install xray >/dev/null 2>&1 || true
+    fi
+  fi
+fi
+
 echo "[xrayctl] Установка завершена."
 echo "[xrayctl] Запуск панели: xrayctl"
