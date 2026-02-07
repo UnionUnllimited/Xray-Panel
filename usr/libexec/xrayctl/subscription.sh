@@ -128,12 +128,18 @@ xr_convert_subscription() {
     return 1
   fi
 
-  if ! printf '%s' "$links_data" | grep -q 'vless://' \
-    && ! printf '%s' "$links_data" | grep -q 'vmess://' \
-    && ! printf '%s' "$links_data" | grep -q 'trojan://'; then
-    if xr_require_cmd base64; then
-      links_data="$(xr_base64_decode "$links_data")"
-    fi
+  local decoded_links
+  decoded_links=""
+  if xr_require_cmd base64; then
+    decoded_links="$(xr_base64_decode "$links_data")"
+  fi
+
+  if printf '%s' "$decoded_links" | grep -q 'vless://' \
+    || printf '%s' "$decoded_links" | grep -q 'vmess://' \
+    || printf '%s' "$decoded_links" | grep -q 'trojan://'; then
+    links_data="$decoded_links"
+    xr_log "Подписка декодирована из base64."
+    printf '%s\n' "$links_data" > "$XRAYCTL_ETC_DIR/subscription.decoded"
   fi
 
   if ! printf '%s' "$links_data" | grep -q 'vless://' \
