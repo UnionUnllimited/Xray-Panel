@@ -37,6 +37,12 @@ curl -fsSL https://raw.githubusercontent.com/your-org/Xray-Panel/main/install.sh
 REPO_URL="https://github.com/your-org/Xray-Panel" REF="main" sh -c "$(curl -fsSL https://raw.githubusercontent.com/your-org/Xray-Panel/main/install.sh)"
 ```
 
+## Полное удаление (для тестов)
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/your-org/Xray-Panel/main/uninstall.sh | sh
+```
+
 ## Формат outbounds.json
 
 Файл должен содержать **JSON array** из outbound-объектов Xray. Каждый outbound должен иметь тег `proxy`, чтобы работал балансер.
