@@ -59,7 +59,7 @@ xr_update_subscription() {
   fi
 
   local sub_data
-  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 30 -H "User-Agent: $ua" "$sub_url")"
+  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 60 -H "User-Agent: $ua" "$sub_url")"
   if [ -z "$sub_data" ]; then
     xr_log "Не удалось загрузить подписку."
     return 1
@@ -105,6 +105,40 @@ xr_clear_nodes() {
   fi
 }
 
+xr_normalize_subscription_payload() {
+  local payload="$1"
+  if [ -z "$payload" ]; then
+    return 0
+  fi
+
+  if xr_contains_links "$payload" || xr_contains_clash "$payload"; then
+    printf '%s' "$payload"
+    return 0
+  fi
+
+  if xr_require_cmd base64; then
+    local decoded
+    decoded="$(xr_base64_decode "$payload")"
+    if xr_contains_links "$decoded" || xr_contains_clash "$decoded"; then
+      printf '%s' "$decoded"
+      return 0
+    fi
+  fi
+
+  printf '%s' "$payload"
+}
+
+xr_contains_links() {
+  printf '%s' "$1" | grep -q 'vless://' \
+    || printf '%s' "$1" | grep -q 'vmess://' \
+    || printf '%s' "$1" | grep -q 'trojan://'
+}
+
+xr_contains_clash() {
+  printf '%s' "$1" | grep -q 'proxies:' \
+    || printf '%s' "$1" | grep -q 'proxy-groups:'
+}
+
 xr_convert_subscription() {
   local sub_url="$1"
   local sub_data="$2"
@@ -112,39 +146,40 @@ xr_convert_subscription() {
   subconverter_url="$(xr_get_uci subscription.subconverter_url)"
   [ -z "$subconverter_url" ] && subconverter_url="http://127.0.0.1:25500/sub"
 
+  local normalized
+  normalized="$(xr_normalize_subscription_payload "$sub_data")"
+
   local links_data
   links_data=""
 
-  if printf '%s' "$sub_data" | grep -q 'proxies:' || printf '%s' "$sub_data" | grep -q 'proxy-groups:'; then
+  if xr_contains_clash "$normalized"; then
     xr_log "Обнаружен Clash/YAML. Используем subconverter."
     links_data="$(curl -fsSL -H "User-Agent: xrayctl" \
       "${subconverter_url}?target=v2ray&url=${sub_url}&list=true")"
+    if [ -z "$links_data" ]; then
+      xr_log "subconverter не вернул данные."
+      return 1
+    fi
+    normalized="$(xr_normalize_subscription_payload "$links_data")"
+    if xr_contains_links "$normalized"; then
+      links_data="$normalized"
+      xr_log "Подписка преобразована через subconverter."
+      printf '%s\n' "$links_data" > "$XRAYCTL_ETC_DIR/subscription.decoded"
+    else
+      links_data="$links_data"
+    fi
   else
-    links_data="$sub_data"
+    links_data="$normalized"
   fi
 
-  if [ -z "$links_data" ]; then
-    xr_log "subconverter не вернул данные."
-    return 1
+  if xr_contains_links "$links_data"; then
+    if [ -n "$normalized" ] && [ "$normalized" != "$sub_data" ]; then
+      xr_log "Подписка декодирована из base64."
+      printf '%s\n' "$links_data" > "$XRAYCTL_ETC_DIR/subscription.decoded"
+    fi
   fi
 
-  local decoded_links
-  decoded_links=""
-  if xr_require_cmd base64; then
-    decoded_links="$(xr_base64_decode "$links_data")"
-  fi
-
-  if printf '%s' "$decoded_links" | grep -q 'vless://' \
-    || printf '%s' "$decoded_links" | grep -q 'vmess://' \
-    || printf '%s' "$decoded_links" | grep -q 'trojan://'; then
-    links_data="$decoded_links"
-    xr_log "Подписка декодирована из base64."
-    printf '%s\n' "$links_data" > "$XRAYCTL_ETC_DIR/subscription.decoded"
-  fi
-
-  if ! printf '%s' "$links_data" | grep -q 'vless://' \
-    && ! printf '%s' "$links_data" | grep -q 'vmess://' \
-    && ! printf '%s' "$links_data" | grep -q 'trojan://'; then
+  if ! xr_contains_links "$links_data"; then
     xr_log "В подписке нет vless/vmess/trojan ссылок."
     return 1
   fi
