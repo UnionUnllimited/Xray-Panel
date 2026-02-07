@@ -78,6 +78,7 @@ xr_restart_xray() {
     /etc/init.d/xray restart
   else
     xr_log "init.d xray не найден. Перезапуск пропущен."
+    xr_log "Установите пакет xray (например: opkg update && opkg install xray)."
   fi
 }
 
@@ -89,6 +90,7 @@ xr_status_logs() {
     tail -n 50 /var/log/xray.log
   else
     xr_log "Логи /var/log/xray.log не найдены."
+    xr_log "Проверьте, что Xray установлен и логирование включено."
   fi
   echo ""
   read -r _

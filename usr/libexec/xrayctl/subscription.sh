@@ -59,7 +59,7 @@ xr_update_subscription() {
   fi
 
   local sub_data
-  sub_data="$(curl -fsSL -H "User-Agent: $ua" "$sub_url")"
+  sub_data="$(curl -fsSL --connect-timeout 10 --max-time 30 -H "User-Agent: $ua" "$sub_url")"
   if [ -z "$sub_data" ]; then
     xr_log "Не удалось загрузить подписку."
     return 1
@@ -73,6 +73,16 @@ xr_update_subscription() {
     xr_log "Подписка преобразована в outbounds."
   else
     xr_log "Не удалось преобразовать подписку."
+  fi
+
+  if [ -f "$XRAYCTL_OUTBOUNDS_FILE" ]; then
+    local node_count
+    node_count="$(grep -c '"protocol"' "$XRAYCTL_OUTBOUNDS_FILE" 2>/dev/null || true)"
+    xr_log "Нод в outbounds: ${node_count:-0}"
+    if [ "${node_count:-0}" -eq 0 ]; then
+      xr_log "Ноды не найдены. Проверьте $XRAYCTL_ETC_DIR/subscription.raw"
+      xr_log "Поддерживаются vless/vmess/trojan; для vmess нужен пакет jsonfilter."
+    fi
   fi
 }
 
@@ -122,7 +132,7 @@ xr_convert_subscription() {
     && ! printf '%s' "$links_data" | grep -q 'vmess://' \
     && ! printf '%s' "$links_data" | grep -q 'trojan://'; then
     if xr_require_cmd base64; then
-      links_data="$(printf '%s' "$links_data" | tr -d '\\n\\r' | base64 -d 2>/dev/null)"
+      links_data="$(xr_base64_decode "$links_data")"
     fi
   fi
 
@@ -134,6 +144,32 @@ xr_convert_subscription() {
   fi
 
   xr_links_to_outbounds "$links_data"
+}
+
+xr_base64_decode() {
+  local data
+  data="$(printf '%s' "$1" | tr -d '\n\r')"
+  if [ -z "$data" ]; then
+    return 0
+  fi
+
+  local normalized
+  normalized="$(printf '%s' "$data" | tr '_-' '/+')"
+  case "$normalized" in
+    *==|*=) ;;
+    *[!A-Za-z0-9+/=]*)
+      printf '%s' "$data"
+      return 0
+      ;;
+    *)
+      case $((${#normalized} % 4)) in
+        2) normalized="${normalized}==" ;;
+        3) normalized="${normalized}=" ;;
+      esac
+      ;;
+  esac
+
+  printf '%s' "$normalized" | base64 -d 2>/dev/null
 }
 
 xr_links_to_outbounds() {
