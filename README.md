@@ -23,6 +23,20 @@
 xrayctl
 ```
 
+## Установка одной командой
+
+На OpenWrt (через SSH):
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/your-org/Xray-Panel/main/install.sh | sh
+```
+
+Если репозиторий в другом месте — укажите `REPO_URL` и ветку `REF`:
+
+```sh
+REPO_URL="https://github.com/your-org/Xray-Panel" REF="main" sh -c "$(curl -fsSL https://raw.githubusercontent.com/your-org/Xray-Panel/main/install.sh)"
+```
+
 ## Формат outbounds.json
 
 Файл должен содержать **JSON array** из outbound-объектов Xray. Каждый outbound должен иметь тег `proxy`, чтобы работал балансер.
