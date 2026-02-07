@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-REPO_URL="${REPO_URL:-https://github.com/your-org/Xray-Panel}"
+REPO_URL="${REPO_URL:-https://github.com/UnionUnllimited/Xray-Panel}"
 REF="${REF:-main}"
 DEST_DIR="${DEST_DIR:-/tmp/xrayctl-install}"
 
