@@ -1,0 +1,10 @@
+config xrayctl 'main'
+	option enabled '0'
+
+config subscription 'subscription'
+	option subconverter_url 'http://127.0.0.1:25500/sub'
+
+config balancer 'balancer'
+	option strategy 'leastPing'
+	option probe_url 'https://www.gstatic.com/generate_204'
+	option probe_interval '10s'
