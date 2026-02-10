@@ -1,0 +1,27 @@
+#!/bin/sh
+
+. /usr/libexec/xrayctl/common.sh
+. /usr/libexec/xrayctl/menu.sh
+. /usr/libexec/xrayctl/subscription.sh
+. /usr/libexec/xrayctl/lists.sh
+. /usr/libexec/xrayctl/xray_config.sh
+
+case "$1" in
+  sub-update)
+    xr_update_subscription
+    ;;
+  list-update)
+    xr_update_lists
+    ;;
+  rebuild)
+    xr_build_config
+    xr_restart_xray
+    ;;
+  menu|"" )
+    xr_menu_loop
+    ;;
+  *)
+    echo "Использование: xrayctl [menu|sub-update|list-update|rebuild]"
+    exit 1
+    ;;
+esac
