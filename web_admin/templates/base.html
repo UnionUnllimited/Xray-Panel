@@ -458,7 +458,7 @@
                           font-weight="900" font-size="44">X</text>
                 </svg>
                 <div class="text-left flex-1 min-w-0 tw-sidebar-label">
-                    <div class="text-[13px] font-semibold leading-tight truncate tw-text-base2">{{ project_name|default('3XUIStore') }}</div>
+                    <div class="text-[13px] font-semibold leading-tight truncate tw-text-base2">{{ project_name|default('Для своих') }}</div>
                     <div class="text-[11px] tw-text-subtle2 leading-tight truncate">
                         {% if current_user.is_authenticated %}{% if current_user.is_admin %}Администратор{% else %}Модератор{% endif %}{% else %}Гость{% endif %}
                     </div>
