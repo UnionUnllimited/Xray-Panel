@@ -5792,6 +5792,40 @@ async def platega_callback_handler(request: web.Request):
         logger.error(f"Platega callback error: {e}")
         return web.Response(status=500, text='Internal error')
 
+async def _yookassa_fetch_status(payment_id: str, meta: dict) -> Optional[str]:
+    """Статус платежа из API YooKassa (GET /v3/payments/{id}) или None, если спросить не вышло.
+
+    Платежи с сайта могут идти через отдельный магазин (WEBSITE_YOOKASSA_*),
+    поэтому для них сначала пробуем его ключи, потом ключи бота.
+    """
+    creds = []
+    if meta.get('registration_type') == 'site':
+        creds.append((os.getenv('WEBSITE_YOOKASSA_SHOP_ID', '').strip(), os.getenv('WEBSITE_YOOKASSA_SECRET_KEY', '').strip()))
+    creds.append((str(app_conf.get('yookassa_shop_id') or '').strip(), str(app_conf.get('yookassa_secret_key') or '').strip()))
+    tried = False
+    for shop_id, secret in creds:
+        if not shop_id or not secret:
+            continue
+        tried = True
+        try:
+            async with httpx.AsyncClient(timeout=10) as client:
+                r = await client.get(f"https://api.yookassa.ru/v3/payments/{payment_id}", auth=(shop_id, secret))
+            if r.status_code == 200:
+                return str(r.json().get('status', '')).lower()
+            if r.status_code in (401, 403, 404):
+                continue  # чужой магазин или неверные ключи — пробуем следующие
+            logger.error(f"YooKassa API: {payment_id} → HTTP {r.status_code}")
+            return None
+        except Exception as e:
+            logger.error(f"YooKassa API: {payment_id} не проверен: {type(e).__name__}: {e}")
+            return None
+    if not tried:
+        logger.error("YooKassa webhook: нет ключей магазина — уведомление не проверить")
+    else:
+        logger.warning(f"YooKassa API: платёж {payment_id} не найден ни в одном магазине")
+        return 'not_found'
+    return None
+
 async def yookassa_webhook_handler(request: web.Request):
     """
     Обработчик webhook уведомлений от YooKassa.
@@ -5824,7 +5858,28 @@ async def yookassa_webhook_handler(request: web.Request):
         if db_payment[4] == 'succeeded':
             logger.info(f"YooKassa webhook: платеж {payment_id} уже обработан")
             return web.Response(status=200, text='OK')
-        
+
+        # Тело уведомления не подписано: верить ему нельзя. id платежа виден
+        # плательщику в ссылке оплаты, и без проверки любой мог прислать сюда
+        # «payment.succeeded» и получить подписку не заплатив. Статус берём
+        # у самой YooKassa и дальше работаем только с ним.
+        try:
+            _meta_for_creds = json.loads(db_payment[6]) if db_payment[6] else {}
+        except (TypeError, ValueError):
+            _meta_for_creds = {}
+        verified_status = await _yookassa_fetch_status(payment_id, _meta_for_creds)
+        if verified_status is None:
+            # Не смогли спросить YooKassa — 500, чтобы она повторила уведомление позже.
+            return web.Response(status=500, text='Verification failed')
+        claimed_status = str(payment_object.get('status', '')).lower()
+        if claimed_status != verified_status:
+            logger.warning(
+                f"YooKassa webhook: {payment_id} — в уведомлении «{claimed_status}», "
+                f"в API «{verified_status}». Уведомление отклонено"
+            )
+            return web.Response(status=200, text='OK')
+        payment_object = {**payment_object, 'status': verified_status}
+
         # Обрабатываем события
         if event_type == 'payment.succeeded':
             payment_status = payment_object.get('status', '').lower()
