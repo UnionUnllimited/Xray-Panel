@@ -1,0 +1,29 @@
+# Базы и их хвосты: в репозитории только код, данные живут на сервере.
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+
+# Секреты и окружения
+.env
+*/.env
+venv/
+*/venv/
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+
+# Логи, бэкапы, кэш
+*.log
+logs/
+backups/
+.cache/
+
+# IDE / ОС
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

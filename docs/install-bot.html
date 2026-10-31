@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>3XUIStore — Инструкция по установке</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f7f7;
+    --bg3: #efefef;
+    --border: #e0e0e0;
+    --text: #0a0a0a;
+    --text2: #555;
+    --text3: #888;
+    --code-bg: #0f0f0f;
+    --code-text: #e8e8e8;
+    --accent: #0a0a0a;
+    --accent-text: #ffffff;
+    --ok-bg: #f0fdf4;
+    --ok-border: #16a34a;
+    --ok-text: #14532d;
+    --warn-bg: #fffbeb;
+    --warn-border: #d97706;
+    --warn-text: #78350f;
+    --note-bg: #f0f9ff;
+    --note-border: #0284c7;
+    --note-text: #0c4a6e;
+  }
+  [data-theme="dark"] {
+    --bg: #0a0a0a;
+    --bg2: #141414;
+    --bg3: #1e1e1e;
+    --border: #2a2a2a;
+    --text: #f0f0f0;
+    --text2: #aaa;
+    --text3: #666;
+    --code-bg: #050505;
+    --code-text: #d4d4d4;
+    --accent: #f0f0f0;
+    --accent-text: #0a0a0a;
+    --ok-bg: #052e16;
+    --ok-border: #166534;
+    --ok-text: #86efac;
+    --warn-bg: #1c1006;
+    --warn-border: #b45309;
+    --warn-text: #fcd34d;
+    --note-bg: #001a2e;
+    --note-border: #0369a1;
+    --note-text: #7dd3fc;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0 }
+  html { font-size: 15px; scroll-behavior: smooth }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--bg); color: var(--text);
+    line-height: 1.65; transition: background .2s, color .2s;
+  }
+
+  .page { max-width: 860px; margin: 0 auto; padding: 0 24px 80px }
+
+  .site-header {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    padding: 14px 24px; display: flex; align-items: center; justify-content: space-between;
+  }
+  .site-header .logo { font-size: 13px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--text) }
+  .site-header .logo span { color: var(--text3); font-weight: 400 }
+  .theme-btn {
+    background: var(--bg3); border: 1px solid var(--border);
+    color: var(--text); border-radius: 8px; padding: 6px 12px;
+    font-size: 12px; font-weight: 600; cursor: pointer; transition: background .15s;
+  }
+  .theme-btn:hover { background: var(--border) }
+
+  .hero { padding: 44px 0 36px; border-bottom: 1px solid var(--border); margin-bottom: 44px }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--text3); margin-bottom: 14px;
+  }
+  .hero-badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #22c55e; display: inline-block }
+  .hero h1 { font-size: clamp(24px, 4vw, 34px); font-weight: 800; letter-spacing: -.03em; color: var(--text); line-height: 1.15; margin-bottom: 10px }
+  .hero p { font-size: 14px; color: var(--text2); max-width: 560px; line-height: 1.7 }
+  .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px }
+  .hero-tag {
+    font-size: 11px; font-weight: 600; letter-spacing: .05em;
+    background: var(--bg3); color: var(--text2); border: 1px solid var(--border);
+    border-radius: 20px; padding: 3px 10px;
+  }
+
+  .section { margin-bottom: 44px }
+  .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 7px;
+    background: var(--accent); color: var(--accent-text);
+    font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .section h2 { font-size: 17px; font-weight: 700; letter-spacing: -.02em; color: var(--text) }
+
+  .card {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 20px;
+  }
+  .card + .card { margin-top: 10px }
+
+  /* Код-блоки */
+  .code-block { position: relative; margin: 0 }
+  .code-label {
+    display: flex; align-items: center; justify-content: space-between;
+    background: #1a1a1a; border-radius: 8px 8px 0 0; padding: 8px 14px;
+    border-bottom: 1px solid #2a2a2a;
+  }
+  .code-lang { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: #555 }
+  .copy-btn {
+    font-size: 11px; font-weight: 600; color: #666; background: transparent;
+    border: 1px solid #333; border-radius: 5px; padding: 3px 9px; cursor: pointer; transition: all .15s;
+  }
+  .copy-btn:hover { color: #ccc; border-color: #555 }
+  .copy-btn.copied { color: #22c55e; border-color: #22c55e }
+  pre {
+    background: var(--code-bg); color: var(--code-text);
+    border-radius: 0 0 8px 8px; padding: 16px 20px;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', Consolas, monospace;
+    font-size: 12.5px; line-height: 1.75; overflow-x: auto;
+    white-space: pre;
+  }
+  .code-block.no-header pre { border-radius: 8px }
+  .sh-cmd  { color: #9cdcfe }
+  .sh-flag { color: #4ec9b0 }
+  .sh-str  { color: #ce9178 }
+  .sh-cmt  { color: #6a9955; font-style: italic }
+  .sh-ok   { color: #22c55e }
+  .sh-dim  { color: #555 }
+
+  /* Алерты */
+  .alert {
+    border-radius: 10px; padding: 13px 16px; display: flex; gap: 11px; align-items: flex-start;
+    font-size: 13px; line-height: 1.6; margin-bottom: 14px;
+  }
+  .alert .alert-icon { flex-shrink: 0; font-size: 15px; margin-top: 1px }
+  .alert.note  { background: var(--note-bg);  border: 1px solid var(--note-border);  color: var(--note-text) }
+  .alert.warn  { background: var(--warn-bg);  border: 1px solid var(--warn-border);  color: var(--warn-text) }
+  .alert.ok    { background: var(--ok-bg);    border: 1px solid var(--ok-border);    color: var(--ok-text) }
+
+  /* Шаги внутри карточки */
+  .steps { list-style: none; display: flex; flex-direction: column; gap: 14px }
+  .steps li { display: flex; gap: 13px; align-items: flex-start; font-size: 13.5px; color: var(--text2) }
+  .steps .sn {
+    flex-shrink: 0; width: 22px; height: 22px; border-radius: 6px;
+    background: var(--bg3); border: 1px solid var(--border);
+    font-size: 11px; font-weight: 700; color: var(--text3);
+    display: flex; align-items: center; justify-content: center; margin-top: 1px;
+  }
+  .steps li strong { color: var(--text) }
+  .steps li code {
+    font-family: 'SF Mono', 'Fira Code', Consolas, monospace;
+    font-size: 12px; background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; color: var(--text);
+  }
+
+  /* Требования */
+  .req-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px }
+  @media (max-width: 540px) { .req-grid { grid-template-columns: 1fr } }
+  .req-item {
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 14px 16px;
+  }
+  .req-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--text3); margin-bottom: 4px }
+  .req-val { font-size: 14px; font-weight: 600; color: var(--text) }
+  .req-sub { font-size: 12px; color: var(--text3); margin-top: 2px }
+
+  /* Диалоговые блоки (что скрипт спрашивает) */
+  .dialog-block {
+    border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 12px;
+  }
+  .dialog-title {
+    background: var(--bg3); padding: 9px 16px;
+    font-size: 12px; font-weight: 700; color: var(--text2); letter-spacing: .04em;
+    display: flex; align-items: center; gap: 8px; border-bottom: 1px solid var(--border);
+  }
+  .dialog-title .badge {
+    font-size: 10px; font-weight: 700; letter-spacing: .06em;
+    padding: 2px 7px; border-radius: 4px; text-transform: uppercase;
+  }
+  .badge-opt  { background: var(--note-bg); color: var(--note-text); border: 1px solid var(--note-border) }
+  .badge-req  { background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border) }
+  .dialog-body { padding: 13px 16px; font-size: 13px; color: var(--text2); line-height: 1.6 }
+  .dialog-body strong { color: var(--text) }
+  .dialog-body code {
+    font-family: 'SF Mono', Consolas, monospace; font-size: 12px;
+    background: var(--bg3); border: 1px solid var(--border);
+    border-radius: 4px; padding: 1px 6px; color: var(--text);
+  }
+
+  /* Итог */
+  .result-box {
+    background: var(--ok-bg); border: 1px solid var(--ok-border);
+    border-radius: 12px; padding: 20px 24px;
+  }
+  .result-box h3 { font-size: 15px; font-weight: 700; color: var(--ok-text); margin-bottom: 12px }
+  .result-row { display: flex; flex-direction: column; gap: 6px }
+  .result-item { display: flex; gap: 10px; align-items: baseline; font-size: 13px }
+  .result-key { font-weight: 700; color: var(--ok-text); white-space: nowrap; min-width: 140px }
+  .result-val { font-family: 'SF Mono', Consolas, monospace; font-size: 12px; color: var(--ok-text); opacity: .85 }
+
+  .divider { border: none; border-top: 1px solid var(--border); margin: 20px 0 }
+
+  .footer { border-top: 1px solid var(--border); padding: 24px 0; text-align: center; font-size: 12px; color: var(--text3) }
+
+  /* Навигация между разделами */
+  .nav-switcher {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 32px;
+  }
+  .nav-card {
+    flex: 1; min-width: 220px;
+    display: flex; align-items: center; gap: 14px;
+    background: var(--bg2); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 20px;
+    text-decoration: none; color: var(--text);
+    transition: border-color .15s, box-shadow .15s;
+    cursor: pointer;
+  }
+  .nav-card:hover { border-color: var(--text3); box-shadow: 0 2px 12px rgba(0,0,0,.07) }
+  .nav-card.active { border-color: var(--accent); background: var(--bg3) }
+  .nav-card-icon { font-size: 22px; flex-shrink: 0 }
+  .nav-card-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .09em; color: var(--text3); margin-bottom: 2px }
+  .nav-card-title { font-size: 14px; font-weight: 700; color: var(--text); line-height: 1.2 }
+  .nav-card-sub { font-size: 11px; color: var(--text3); margin-top: 2px }
+
+  /* Показываем только выбранный раздел (бот или SUBPAGE) */
+  .doc-section--hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="logo">3XUIStore <span>/ Инструкция по установке</span></div>
+  <button class="theme-btn" onclick="toggleTheme()" id="theme-label">☾ Тёмная</button>
+</header>
+
+<div class="page">
+
+  <!-- Навигация -->
+  <div class="nav-switcher" style="padding-top:32px;">
+    <a class="nav-card active" href="#section-bot">
+      <div class="nav-card-icon">🤖</div>
+      <div>
+        <div class="nav-card-label">Раздел 1</div>
+        <div class="nav-card-title">Установка бота</div>
+        <div class="nav-card-sub">VPS, nginx, SSL, systemd</div>
+      </div>
+    </a>
+    <a class="nav-card" href="#section-subpage">
+      <div class="nav-card-icon">📡</div>
+      <div>
+        <div class="nav-card-label">Раздел 2</div>
+        <div class="nav-card-title">Установка SUBPAGE</div>
+        <div class="nav-card-sub">Внешний сервер, отдельный домен</div>
+      </div>
+    </a>
+  </div>
+
+  <div id="section-bot" style="scroll-margin-top: 70px;">
+  <div class="hero">
+    <div class="hero-badge">Установка</div>
+    <h1>Развёртывание бота на сервере</h1>
+    <p>Пошаговое руководство: копирование файлов на VPS, получение SSL-сертификата и запуск всех сервисов через единый скрипт.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Ubuntu 24.04</span>
+      <span class="hero-tag">Python 3.12</span>
+      <span class="hero-tag">nginx</span>
+      <span class="hero-tag">systemd</span>
+      <span class="hero-tag">certbot</span>
+    </div>
+  </div>
+
+  <!-- Требования -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">0</div>
+      <h2>Требования</h2>
+    </div>
+    <div class="req-grid">
+      <div class="req-item">
+        <div class="req-label">ОС</div>
+        <div class="req-val">Ubuntu 24.04</div>
+        <div class="req-sub">Python 3.12 (включён по умолчанию)</div>
+      </div>
+      <div class="req-item">
+        <div class="req-label">Доступ</div>
+        <div class="req-val">Root по SSH</div>
+        <div class="req-sub">порт 22 или кастомный</div>
+      </div>
+      <div class="req-item">
+        <div class="req-label">RAM / CPU</div>
+        <div class="req-val">от 2 GB RAM, 2 vCPU</div>
+        <div class="req-sub">при использовании всех модулей (бот, админка, xuiweb, аналитика)</div>
+      </div>
+      <div class="req-item">
+        <div class="req-label">Домен</div>
+        <div class="req-val">А-запись → IP сервера</div>
+        <div class="req-sub">нужен для SSL (Let's Encrypt)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Шаг 1: Подключение -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">1</div>
+      <h2>Подключитесь к серверу по SSH</h2>
+    </div>
+    <div class="card">
+      <ul class="steps">
+        <li><span class="sn">1</span><span>Скачайте и установите <strong>PuTTY</strong>: <code>putty.org</code></span></li>
+        <li><span class="sn">2</span><span>В поле <strong>Host Name</strong> введите IP вашего сервера, порт <code>22</code>, тип подключения <strong>SSH</strong></span></li>
+        <li><span class="sn">3</span><span>Нажмите <strong>Open</strong>, введите логин <code>root</code> и пароль от сервера</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Шаг 2: Загрузка файлов -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">2</div>
+      <h2>Загрузите папку <code style="font-size:15px;font-family:monospace;background:var(--bg3);border:1px solid var(--border);border-radius:5px;padding:1px 8px;">bot</code> на сервер</h2>
+    </div>
+
+    <div class="alert warn">
+      <span class="alert-icon">⚠️</span>
+      <div>Папку нужно разместить точно по пути <strong>/root/bot</strong>. Скрипт установки проверяет текущую директорию и завершится с ошибкой, если запустить из другого места.</div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Через WinSCP / FileZilla (графический интерфейс)</div>
+      <ul class="steps">
+        <li><span class="sn">1</span><span>Откройте <strong>WinSCP</strong> или <strong>FileZilla</strong>, подключитесь к серверу (протокол <strong>SFTP</strong>, порт <code>22</code>)</span></li>
+        <li><span class="sn">2</span><span>В правой панели (сервер) откройте папку <code>/root/</code></span></li>
+        <li><span class="sn">3</span><span>Перетащите папку <code>bot</code> из левой панели (ваш ПК) в правую — на сервер</span></li>
+        <li><span class="sn">4</span><span>Дождитесь завершения копирования</span></li>
+      </ul>
+    </div>
+
+    <div class="alert note" style="margin-top:12px;">
+      <span class="alert-icon">ℹ️</span>
+      <div>После загрузки проверьте, что структура выглядит так: <code style="font-family:monospace;font-size:12px;">/root/bot/install_bot.sh</code>, <code style="font-family:monospace;font-size:12px;">/root/bot/service/</code>, <code style="font-family:monospace;font-size:12px;">/root/bot/web_admin/</code> и т.д.</div>
+    </div>
+  </div>
+
+  <!-- Шаг 3: Запуск скрипта -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">3</div>
+      <h2>Запустите скрипт установки</h2>
+    </div>
+    <div class="card">
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">cd</span> /root/bot
+<span class="sh-cmd">bash</span> install_bot.sh</pre>
+      </div>
+    </div>
+    <div class="alert warn" style="margin-top:12px;">
+      <span class="alert-icon">⚠️</span>
+      <div>Скрипт требует <strong>root-прав</strong> и запуска строго из <code style="font-family:monospace;font-size:12px;">/root/bot/</code>. Не используйте <code style="font-family:monospace;font-size:12px;">sudo bash install_bot.sh</code> из другой директории.</div>
+    </div>
+  </div>
+
+  <!-- Шаг 4: Что спрашивает скрипт -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">4</div>
+      <h2>Что скрипт спросит в процессе</h2>
+    </div>
+
+    <p style="font-size:13px;color:var(--text2);margin-bottom:18px;">Скрипт автоматически устанавливает зависимости и задаёт несколько вопросов. Ниже — каждый из них.</p>
+
+    <div class="dialog-block">
+      <div class="dialog-title">
+        <span>🔐 Секретный путь веб-админки</span>
+        <span class="badge badge-req">Рекомендуется задать</span>
+      </div>
+      <div class="dialog-body">
+        Веб-админка будет доступна по адресу <code>https://домен/<strong>путь</strong>/</code>.<br>
+        По умолчанию предлагается <code>admin123</code> — смените на что-то уникальное, это защита от перебора.<br><br>
+        <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;">
+          <span style="font-size:13px;">Сгенерировать путь:</span>
+          <code id="gen-path-result" style="font-size:13px;letter-spacing:.05em;min-width:90px;display:inline-block;">—</code>
+          <button onclick="genSecretPath()" style="
+            background:var(--accent);color:var(--accent-text);border:none;border-radius:7px;
+            padding:5px 13px;font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;
+            transition:opacity .15s;
+          " onmouseover="this.style.opacity='.8'" onmouseout="this.style.opacity='1'">🔀 Сгенерировать</button>
+          <button id="gen-path-copy" onclick="copyGenPath(this)" style="
+            display:none;background:transparent;border:1px solid var(--border);border-radius:7px;
+            padding:5px 13px;font-size:12px;font-weight:600;cursor:pointer;color:var(--text2);font-family:inherit;
+            transition:all .15s;
+          ">Копировать</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-block">
+      <div class="dialog-title">
+        <span>🌐 Домен для SSL-сертификата</span>
+        <span class="badge badge-req">Обязательно</span>
+      </div>
+      <div class="dialog-body">
+        Введите домен, А-запись которого уже указывает на IP этого сервера.<br>
+        Скрипт автоматически получит сертификат через <strong>Let's Encrypt</strong> и настроит nginx.<br>
+        <strong>Пример:</strong> <code>bot.example.com</code>
+        <div class="alert warn" style="margin-top:10px;margin-bottom:0;">
+          <span class="alert-icon">⚠️</span>
+          <div>Если А-запись ещё не указывает на сервер — сначала настройте DNS, подождите распространения (до 24ч), затем запускайте установку.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dialog-block">
+      <div class="dialog-title">
+        <span>🤖 Токен Telegram-бота</span>
+        <span class="badge badge-req">Рекомендуется задать</span>
+      </div>
+      <div class="dialog-body">
+        Токен бота из <strong>@BotFather</strong> в Telegram.<br>
+        Если пропустить (Enter) — сервис запустится, но бот работать не будет и может создавать лишнюю нагрузку на сервер. Токен можно задать позже в веб-админке.<br>
+        <strong>Формат:</strong> <code>1234567890:ABCDEFabcdef...</code>
+      </div>
+    </div>
+
+    <div class="dialog-block">
+      <div class="dialog-title">
+        <span>📡 Установка SUBPAGE (страницы подписки)</span>
+        <span class="badge badge-opt">На выбор</span>
+      </div>
+      <div class="dialog-body">
+        <strong>Вариант 1</strong> — установить SUBPAGE на этот же сервер. Скрипт скопирует папку <code>/root/bot/subpage</code> в <code>/root/subpage</code> и запустит его установку. URL подписки будет на том же домене.<br><br>
+        <strong>Вариант 2</strong> — SUBPAGE находится на внешнем сервере. Скрипт спросит его домен (по умолчанию подставит ранее введённый домен бота). URL подписки будет сохранён в базе данных.
+      </div>
+    </div>
+  </div>
+
+  <!-- Шаг 5: Что происходит автоматически -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">5</div>
+      <h2>Что скрипт делает автоматически</h2>
+    </div>
+    <div class="card">
+      <ul class="steps">
+        <li><span class="sn">✓</span><span>Устанавливает <strong>Python 3, pip, sqlite3, nginx, certbot</strong></span></li>
+        <li><span class="sn">✓</span><span>Получает SSL-сертификат через <strong>Let's Encrypt</strong> и копирует в <code>/root/cert/</code></span></li>
+        <li><span class="sn">✓</span><span>Генерирует конфиг nginx <code>/etc/nginx/conf.d/xuiweb.conf</code> с вашим доменом и секретным путём</span></li>
+        <li><span class="sn">✓</span><span>Создаёт виртуальные окружения Python (<code>venv</code>) и устанавливает зависимости для бота, веб-админки, xuiweb и аналитики</span></li>
+        <li><span class="sn">✓</span><span>Записывает домен и секретный путь в базу данных <code>/root/bot/vpn_bot.db</code></span></li>
+        <li><span class="sn">✓</span><span>Копирует <code>.service</code>-файлы в systemd и запускает сервисы:<br>
+          <code>vpn-bot</code>, <code>vpn-webadmin</code>, <code>xuiweb</code>, <code>analytics</code></span></li>
+        <li><span class="sn">✓</span><span>Добавляет все сервисы в <strong>автозапуск</strong> при перезагрузке сервера</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Шаг 6: Проверка после установки -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">6</div>
+      <h2>Проверка после установки</h2>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Статус сервисов</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">systemctl</span> status vpn-bot vpn-webadmin xuiweb analytics</pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Логи веб-админки в реальном времени</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">journalctl</span> <span class="sh-flag">-u</span> vpn-webadmin <span class="sh-flag">-f</span></pre>
+      </div>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Логи бота в реальном времени</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">journalctl</span> <span class="sh-flag">-u</span> vpn-bot <span class="sh-flag">-f</span></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Результат -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">✓</div>
+      <h2>Результат установки</h2>
+    </div>
+
+    <div class="result-box">
+      <h3>✅ Установка завершена</h3>
+      <div class="result-row">
+        <div class="result-item">
+          <span class="result-key">🌐 Веб-админка</span>
+          <span class="result-val">https://ВАШ_ДОМЕН/СЕКРЕТНЫЙ_ПУТЬ/</span>
+        </div>
+        <div class="result-item">
+          <span class="result-key">📡 SUBPAGE</span>
+          <span class="result-val">https://ДОМЕН_SUBPAGE/sub/&lt;uuid&gt;</span>
+        </div>
+        <div class="result-item">
+          <span class="result-key">ℹ️ Настройки</span>
+          <span class="result-val">Токен и прочее — в веб-админке</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Частые проблемы -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">!</div>
+      <h2>Частые проблемы</h2>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">certbot не получает сертификат</div>
+      <p style="font-size:13px;color:var(--text2);">А-запись домена не указывает на IP сервера, или порт 80 занят другим процессом. Скрипт останавливает nginx перед certbot — убедитесь, что порт 80 свободен.</p>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">Скрипт завершается с ошибкой «не в /root/bot»</div>
+      <p style="font-size:13px;color:var(--text2);">Убедитесь, что папка скопирована именно в <code style="font-family:monospace;font-size:12px;">/root/bot</code>, а не в <code style="font-family:monospace;font-size:12px;">/root/bot/bot</code>. Проверьте: <code style="font-family:monospace;font-size:12px;">ls /root/bot/install_bot.sh</code></p>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">Сервис запущен, но бот не отвечает</div>
+      <p style="font-size:13px;color:var(--text2);">Скорее всего, не введён токен бота. Откройте веб-админку → Настройки → Основные → укажите токен и сохраните. Затем перезапустите: <code style="font-family:monospace;font-size:12px;">systemctl restart vpn-bot</code></p>
+    </div>
+
+    <div class="card">
+      <div style="font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px;">pip install зависает или падает</div>
+      <div class="code-block no-header" style="margin-top:8px;">
+        <pre><span class="sh-cmt"># Проверьте доступность PyPI</span>
+<span class="sh-cmd">curl</span> <span class="sh-flag">-I</span> https://pypi.org
+<span class="sh-cmt"># Попробуйте запустить установку повторно</span>
+<span class="sh-cmd">bash</span> install_bot.sh</pre>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /#section-bot -->
+
+  <div id="section-subpage" class="doc-section--hidden" style="scroll-margin-top: 70px;">
+
+  <div class="hero">
+    <div class="hero-badge">Внешний сервер</div>
+    <h1>SUBPAGE — страница подписки</h1>
+    <p>Отдельный веб-сервер для страницы подписки пользователей. Рекомендуется размещать на независимом сервере с собственным доменом.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">Ubuntu 24.04</span>
+      <span class="hero-tag">Python 3.12</span>
+      <span class="hero-tag">nginx + SSL</span>
+      <span class="hero-tag">systemd</span>
+    </div>
+  </div>
+
+  <div class="alert warn" style="margin-bottom:28px;">
+    <span class="alert-icon">⚠️</span>
+    <div><strong>Рекомендация по домену.</strong> Настоятельно рекомендуется использовать <strong>отдельный домен</strong> для SUBPAGE, не связанный с доменом бота. Например, если бот на <code style="font-family:monospace;font-size:12px;">bot.example.com</code>, для SUBPAGE возьмите другой домен. Это повышает безопасность и позволяет независимо управлять подписками.</div>
+  </div>
+
+  <!-- SP Шаг 1: Подготовка -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">1</div>
+      <h2>Подготовка сервера</h2>
+    </div>
+    <div class="card">
+      <ul class="steps">
+        <li><span class="sn">✓</span><span>Сервер с <strong>Ubuntu 24.04</strong>, доступ root по SSH</span></li>
+        <li><span class="sn">✓</span><span>Отдельный домен с А-записью, указывающей на IP этого сервера<br>
+          <span style="font-size:12px;color:var(--text3);">Пример: <code>sub.example.com</code></span></span></li>
+        <li><span class="sn">✓</span><span>Порты <code>80</code> и <code>443</code> открыты в файрволе</span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SP Шаг 2: Установка -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">2</div>
+      <h2>Установка SUBPAGE</h2>
+    </div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Выполните команду на сервере SUBPAGE (не на сервере бота):</p>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">bash</span> &lt;(<span class="sh-cmd">curl</span> <span class="sh-flag">-sSL</span> <span class="sh-str">https://update.3xstore.ru/subpage/install.sh</span>)</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Скрипт автоматически</div>
+      <ul class="steps">
+        <li><span class="sn">✓</span><span>Установит Python 3.12 и необходимые зависимости</span></li>
+        <li><span class="sn">✓</span><span>Создаст виртуальное окружение и установит пакеты</span></li>
+        <li><span class="sn">✓</span><span>Создаст systemd-сервис для автозапуска</span></li>
+        <li><span class="sn">✓</span><span>Установит CLI-утилиту управления <code>subpage</code></span></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SP Шаг 3: Nginx + SSL -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">3</div>
+      <h2>Настройка Nginx и SSL-сертификата</h2>
+    </div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">После установки запустите CLI-утилиту управления:</p>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> subpage</pre>
+      </div>
+    </div>
+    <div class="card">
+      <ul class="steps">
+        <li><span class="sn">1</span><span>В главном меню выберите <strong>9 — 🌐 Управление Nginx</strong></span></li>
+        <li><span class="sn">2</span><span>В подменю выберите <strong>1 — 🌐 Установить и настроить Nginx с SSL</strong></span></li>
+        <li><span class="sn">3</span><span>Введите домен SUBPAGE: например <code>sub.example.com</code></span></li>
+        <li><span class="sn">4</span><span>Укажите email для Let's Encrypt — <strong>желательно ввести</strong>, чтобы получать уведомления об истечении сертификата</span></li>
+        <li><span class="sn">5</span><span>Скрипт получит сертификат через Certbot и настроит nginx как reverse proxy</span></li>
+      </ul>
+    </div>
+    <div class="alert note" style="margin-top:12px;">
+      <span class="alert-icon">💡</span>
+      <div>Certbot использует standalone-режим. Убедитесь, что порт <code style="font-family:monospace;font-size:12px;">80</code> свободен. Если нужно открыть порты — в главном меню выберите <strong>пункт 8 — 🔥 Управление файрволом</strong>.</div>
+    </div>
+  </div>
+
+  <!-- SP Шаг 4: Файрвол -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">4</div>
+      <h2>Настройка файрвола (UFW)</h2>
+    </div>
+    <div class="card">
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> ufw allow 22/tcp  comment <span class="sh-str">'SSH'</span>
+<span class="sh-cmd">sudo</span> ufw allow 80/tcp  comment <span class="sh-str">'HTTP (Nginx)'</span>
+<span class="sh-cmd">sudo</span> ufw allow 443/tcp comment <span class="sh-str">'HTTPS (Nginx)'</span>
+<span class="sh-cmd">sudo</span> ufw enable</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SP Шаг 5: .env -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">5</div>
+      <h2>Настройка переменных окружения (.env)</h2>
+    </div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">Запустите CLI и выберите <strong>6 — 📝 Редактировать .env файл</strong>:</p>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> subpage</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:14px;">Обязательно указать</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:14px;">В <code style="font-family:monospace;font-size:12px;">.env</code> на сервере SUBPAGE достаточно задать две переменные. Остальные параметры в файле — <strong>опциональны</strong>: они используются как запасной вариант, если API бота недоступен (ошибка сети, таймаут, 404) или если <code style="font-family:monospace;font-size:12px;">API_CUSTOM_SETTINGS=false</code>.</p>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">.env</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmt"># URL API бота (откуда subpage берёт данные подписки)</span>
+<span class="sh-cmt"># SUBPAGE на отдельном сервере:</span>
+<span class="sh-cmd">API_BASE_URL</span>=<span class="sh-str">https://bot.domain.com</span>
+<span class="sh-cmt"># SUBPAGE на том же сервере, что и бот:</span>
+<span class="sh-cmt"># API_BASE_URL=http://127.0.0.1:8282</span>
+
+<span class="sh-cmt"># true — настройки страницы из веб-админки (Настройки → SUBPAGE)</span>
+<span class="sh-cmd">API_CUSTOM_SETTINGS</span>=<span class="sh-str">true</span></pre>
+      </div>
+      <div class="alert info" style="margin-top:16px;margin-bottom:0;">
+        <span class="alert-icon">ℹ️</span>
+        <div>
+          <strong><code style="font-family:monospace;font-size:12px;">API_CUSTOM_SETTINGS=true</code></strong> — при старте subpage один раз запрашивает <code style="font-family:monospace;font-size:12px;">{API_BASE_URL}/api/settings/info</code> и подставляет значения из раздела <strong>Настройки → SUBPAGE</strong> (название, ссылки, тема, заглушки и т.д.). После изменений в админке нужен <strong>перезапуск</strong> subpage — иначе останутся старые значения.<br><br>
+          Поля в <code style="font-family:monospace;font-size:12px;">.env</code> (PROJECT_NAME, SUPPORT_URL, ссылки на приложения и др.) при успешной загрузке из админки переопределяются только там, где в админке задано непустое значение; при недоступности API subpage продолжит работать по <code style="font-family:monospace;font-size:12px;">.env</code>.
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--text3);margin-top:14px;">В редакторе nano: <strong>Ctrl+O</strong> — сохранить, <strong>Enter</strong> — подтвердить, <strong>Ctrl+X</strong> — выйти. Полный список переменных — в <code style="font-family:monospace;font-size:12px;">subpage/env.example</code>.</p>
+    </div>
+    <div class="card">
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px;">После сохранения .env перезапустите сервис:</p>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> systemctl restart subpage</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- SP Шаг 6: Привязка к боту -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">6</div>
+      <h2>Добавьте ссылку SUBPAGE в настройки бота</h2>
+    </div>
+    <div class="card">
+      <ul class="steps">
+        <li><span class="sn">1</span><span>Откройте веб-админку бота → <strong>Настройки → Подписка</strong></span></li>
+        <li><span class="sn">2</span><span>Найдите параметр <code>sub_page_url</code></span></li>
+        <li><span class="sn">3</span><span>Установите значение: <code>https://ваш-домен-subpage.com</code></span></li>
+        <li><span class="sn">4</span><span>Сохраните настройки</span></li>
+      </ul>
+    </div>
+    <div class="result-box" style="margin-top:12px;">
+      <h3>✅ Готово</h3>
+      <div class="result-row">
+        <div class="result-item">
+          <span class="result-key">📡 Страница подписки</span>
+          <span class="result-val">https://ВАШ_ДОМЕН_SUBPAGE/sub/&lt;uuid&gt;</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SP Шаг 7: Проверка -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">7</div>
+      <h2>Проверка работы</h2>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Статус сервиса</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> systemctl status subpage</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Логи в реальном времени</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> journalctl <span class="sh-flag">-u</span> subpage <span class="sh-flag">-n</span> 50 <span class="sh-flag">-f</span></pre>
+      </div>
+    </div>
+    <div class="alert note" style="margin-top:12px;">
+      <span class="alert-icon">🌐</span>
+      <div>Откройте в браузере: <code style="font-family:monospace;font-size:12px;">https://ваш-домен/sub/test-uuid</code> — должна появиться страница подписки (или ошибка UUID — это нормально).</div>
+    </div>
+  </div>
+
+  <!-- SP: Полезные команды -->
+  <div class="section">
+    <div class="section-header">
+      <div class="step-num">?</div>
+      <h2>Полезные команды управления</h2>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">CLI-утилита</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> subpage</pre>
+      </div>
+    </div>
+    <div class="card">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--text3);margin-bottom:12px;">Команды systemctl</div>
+      <div class="code-block">
+        <div class="code-label">
+          <span class="code-lang">bash</span>
+          <button class="copy-btn" onclick="copyCode(this)">Копировать</button>
+        </div>
+        <pre><span class="sh-cmd">sudo</span> systemctl start   subpage   <span class="sh-cmt"># Запустить</span>
+<span class="sh-cmd">sudo</span> systemctl stop    subpage   <span class="sh-cmt"># Остановить</span>
+<span class="sh-cmd">sudo</span> systemctl restart subpage   <span class="sh-cmt"># Перезапустить</span>
+<span class="sh-cmd">sudo</span> systemctl status  subpage   <span class="sh-cmt"># Статус</span>
+<span class="sh-cmd">sudo</span> systemctl enable  subpage   <span class="sh-cmt"># Включить автозапуск</span>
+<span class="sh-cmd">sudo</span> systemctl disable subpage   <span class="sh-cmt"># Отключить автозапуск</span></pre>
+      </div>
+    </div>
+  </div>
+
+  </div><!-- /#section-subpage -->
+
+</div><!-- /.page -->
+
+<div class="page" style="padding-top:0;padding-bottom:0;">
+  <div class="footer">3XUIStore — Инструкция по установке</div>
+</div>
+
+<script>
+// Переключение разделов: виден только выбранный (бот или SUBPAGE)
+(function() {
+  var botEl = document.getElementById('section-bot');
+  var spEl = document.getElementById('section-subpage');
+  var cards = document.querySelectorAll('.nav-card');
+  if (!botEl || !spEl || !cards.length) return;
+
+  function showSection(which) {
+    var isSubpage = which === 'subpage';
+    botEl.classList.toggle('doc-section--hidden', isSubpage);
+    spEl.classList.toggle('doc-section--hidden', !isSubpage);
+    cards.forEach(function(c, i) {
+      c.classList.toggle('active', isSubpage ? i === 1 : i === 0);
+    });
+    var hash = isSubpage ? '#section-subpage' : '#section-bot';
+    try { history.replaceState(null, '', hash); } catch (e) {}
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  cards[0].addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection('bot');
+  });
+  cards[1].addEventListener('click', function(e) {
+    e.preventDefault();
+    showSection('subpage');
+  });
+
+  window.addEventListener('hashchange', function() {
+    showSection(location.hash === '#section-subpage' ? 'subpage' : 'bot');
+  });
+
+  showSection(location.hash === '#section-subpage' ? 'subpage' : 'bot');
+})();
+
+function genSecretPath() {
+  var chars = 'abcdefghijklmnopqrstuvwxyz';
+  var len = Math.floor(Math.random() * 5) + 14; // 14–18 символов
+  var result = '';
+  for (var i = 0; i < len; i++) {
+    result += chars[Math.floor(Math.random() * chars.length)];
+  }
+  var el = document.getElementById('gen-path-result');
+  var copyBtn = document.getElementById('gen-path-copy');
+  el.textContent = result;
+  copyBtn.style.display = 'inline-block';
+  copyBtn.textContent = 'Копировать';
+  copyBtn.style.color = 'var(--text2)';
+  copyBtn.style.borderColor = 'var(--border)';
+}
+
+function copyGenPath(btn) {
+  var text = document.getElementById('gen-path-result').textContent;
+  if (!text || text === '—') return;
+  navigator.clipboard.writeText(text).then(function() {
+    btn.textContent = '✓ Скопировано';
+    btn.style.color = '#22c55e';
+    btn.style.borderColor = '#22c55e';
+    setTimeout(function() {
+      btn.textContent = 'Копировать';
+      btn.style.color = 'var(--text2)';
+      btn.style.borderColor = 'var(--border)';
+    }, 2000);
+  });
+}
+
+function toggleTheme() {
+  var html = document.documentElement;
+  var isDark = html.getAttribute('data-theme') === 'dark';
+  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+  document.getElementById('theme-label').textContent = isDark ? '☾ Тёмная' : '☀ Светлая';
+  try { localStorage.setItem('theme', isDark ? 'light' : 'dark'); } catch(e) {}
+}
+
+(function() {
+  try {
+    var t = localStorage.getItem('theme');
+    if (t === 'dark') {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      document.addEventListener('DOMContentLoaded', function() {
+        var btn = document.getElementById('theme-label');
+        if (btn) btn.textContent = '☀ Светлая';
+      });
+    }
+  } catch(e) {}
+})();
+
+function copyCode(btn) {
+  var pre = btn.closest('.code-block').querySelector('pre');
+  var text = pre.innerText || pre.textContent;
+  navigator.clipboard.writeText(text.trim()).then(function() {
+    btn.textContent = '✓ Скопировано';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Копировать';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(function() {
+    var ta = document.createElement('textarea');
+    ta.value = text.trim();
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Скопировано';
+    btn.classList.add('copied');
+    setTimeout(function() {
+      btn.textContent = 'Копировать';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+</script>
+</body>
+</html>

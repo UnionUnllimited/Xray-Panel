@@ -1,0 +1,9 @@
+# Сервер — Linux: скрипты и конфиги с CRLF ломают bash и systemd.
+* text=auto eol=lf
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.zip binary
+*.db binary
