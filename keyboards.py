@@ -94,6 +94,15 @@ async def get_main_keyboard(is_trial_available: bool, has_active_sub: bool, sub_
     full_url_android = f"{full_url.rstrip('/')}/android"
     connect_urls = (full_url, full_url_apple, full_url_android)
 
+    # Мини-апп — первой кнопкой меню: в нём подписка, тарифы и подключение на одном экране.
+    from miniapp.links import miniapp_url
+    _mini = miniapp_url()
+    if _mini:
+        builder.row(InlineKeyboardButton(
+            text=(app_conf.get('miniapp_button_text') or '📱 Открыть приложение'),
+            web_app=WebAppInfo(url=_mini),
+        ))
+
     layout = parse_main_menu_layout(app_conf.get(MAIN_MENU_LAYOUT_SETTING, ''))
 
     for row_keys in layout:

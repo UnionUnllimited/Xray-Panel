@@ -488,3 +488,19 @@ details > summary::-webkit-details-marker { display: none }
 .code-chip { font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 18px; letter-spacing: .06em; align-self: flex-start; gap: 10px }
 .code-chip .small { font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Inter, sans-serif; letter-spacing: 0 }
 .steps { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; line-height: 1.4 }
+
+/* ================= Мини-апп подписки: дополнения к системе «Линзы» ================= */
+.status-hero { gap: 14px }
+.status-hero .health { font-size: 15px }
+.status-hero .stats .stat { padding: 10px 12px }
+.status-hero .stats .stat .v { font-size: 17px }
+.tile .ico-sm, .lgs.ico-sm { width: 40px; height: 40px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; color: var(--accent-ink) }
+.tile { min-height: 96px }
+.tile .t { font-size: 16px }
+[aria-checked="true"] .radio { box-shadow: inset 0 0 0 7px var(--accent) }
+.plan { gap: 12px }
+.plan b { font-size: 17px; font-variant-numeric: tabular-nums; white-space: nowrap }
+.chips .chip { min-width: 52px; justify-content: center }
+.panel.row-flex .code { line-height: 1.35 }
+.mono { font-weight: 700 }
+#summary .price b { font-size: 30px }

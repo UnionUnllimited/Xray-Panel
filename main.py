@@ -1270,7 +1270,17 @@ async def show_main_menu(message_or_query: Message | CallbackQuery, edit_message
     # --- Установка кнопки меню (Menu Button) ---
     try:
         await bot.set_my_commands([BotCommand(command='start', description='🏠 Главное меню')], scope={'type': 'chat', 'chat_id': user_id})
-        await bot.set_chat_menu_button(chat_id=user_id, menu_button=MenuButtonCommands())
+        # Мини-апп включён — кнопка слева от поля ввода открывает его, иначе — команды.
+        from miniapp.links import miniapp_url
+        _mini = miniapp_url()
+        if _mini:
+            _label = (app_conf.get('btn_menu_my_subscription') or 'Приложение').strip()[:32] or 'Приложение'
+            await bot.set_chat_menu_button(
+                chat_id=user_id,
+                menu_button=MenuButtonWebApp(text=_label, web_app=WebAppInfo(url=_mini)),
+            )
+        else:
+            await bot.set_chat_menu_button(chat_id=user_id, menu_button=MenuButtonCommands())
     except Exception as e:
         logger.error(f"Не удалось установить кнопку меню для {user_id}: {e}")
 
@@ -8530,6 +8540,25 @@ async def main():
         start_notification_tasks(bot)
         start_stale_payments_task(active_payment_checkers)
         start_expired_traffic_reset_task()
+
+        # Мини-апп (/miniapp/): статика и JSON-API на том же сервере. Функции бота
+        # передаём ссылками — так мини-апп не дублирует логику и не импортирует main.py.
+        # Регистрировать до AppRunner.setup(): после него маршруты заморожены.
+        try:
+            from miniapp.api import setup_miniapp
+            setup_miniapp(
+                web_app,
+                get_bot=lambda: bot,  # bot пересоздаётся при смене прокси/токена
+                trial_enabled=_trial_enabled,
+                trial_locks=_trial_grant_locks,
+                resolve_limit_ip=_resolve_limit_ip_for_user,
+                ensure_partner_code=_ensure_partner_code,
+                partner_stats=_get_partner_stats,
+                devices_fetch=_my_devices_fetch,
+                devices_delete=_my_devices_delete,
+            )
+        except Exception as e:
+            logger.error(f"Мини-апп не подключён: {e}", exc_info=True)
 
         # Запускаем webhook-сервер (127.0.0.1:8081): YooMoney, Platega, CryptoBot, …
         runner = web.AppRunner(web_app)

@@ -131,9 +131,21 @@ export function requestWriteAccess() {
   });
 }
 
-export function copyText(text) {
-  if (navigator.clipboard?.writeText) return navigator.clipboard.writeText(text).then(() => true, () => false);
-  return Promise.resolve(false);
+// В части клиентов Telegram clipboard API недоступен — тогда копируем через выделение.
+export async function copyText(text) {
+  if (navigator.clipboard?.writeText) {
+    try { await navigator.clipboard.writeText(text); return true; } catch {}
+  }
+  try {
+    const ta = Object.assign(document.createElement('textarea'), { value: text, readOnly: true });
+    ta.style.cssText = 'position:fixed;top:-1000px;opacity:0';
+    document.body.append(ta);
+    ta.select();
+    ta.setSelectionRange(0, text.length);
+    const ok = document.execCommand('copy');
+    ta.remove();
+    return ok;
+  } catch { return false; }
 }
 
 // Telegram's chat picker; outside Telegram the system share sheet, then the clipboard.
@@ -146,4 +158,39 @@ export async function shareLink(url, text) {
     try { await navigator.share({ text, url }); return 'system'; } catch (e) { if (e?.name === 'AbortError') return 'cancelled'; }
   }
   return (await copyText(url)) ? 'copied' : 'failed';
+}
+
+/* ---------- Оплата и возврат в приложение ---------- */
+// Счёт Telegram Stars внутри Telegram. Резолвится статусом: paid | cancelled | failed | pending.
+export function openInvoice(url) {
+  return new Promise((resolve) => {
+    if (!tg || !atLeast('6.1')) { openLink(url); resolve('pending'); return; }
+    try { tg.openInvoice(url, (status) => resolve(status)); } catch { openLink(url); resolve('pending'); }
+  });
+}
+
+// Вызывает fn, когда пользователь возвращается в мини-апп (после оплаты в браузере).
+export function onReturn(fn) {
+  const vis = () => { if (document.visibilityState === 'visible') fn(); };
+  document.addEventListener('visibilitychange', vis);
+  if (tg) { try { tg.onEvent('activated', fn); } catch {} }
+  return () => {
+    document.removeEventListener('visibilitychange', vis);
+    if (tg) { try { tg.offEvent('activated', fn); } catch {} }
+  };
+}
+
+// ios | android | macos | windows | linux | null — чтобы сразу открыть нужную инструкцию.
+export function devicePlatform() {
+  const p = (tg?.platform || '').toLowerCase();
+  if (p === 'ios') return 'ios';
+  if (p.startsWith('android')) return 'android';
+  if (p === 'macos') return 'mac';
+  const ua = navigator.userAgent;
+  if (/iPhone|iPad|iPod/.test(ua)) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  if (/Mac OS X/.test(ua)) return 'mac';
+  if (/Windows/.test(ua)) return 'windows';
+  if (/Linux/.test(ua)) return 'linux';
+  return null;
 }
