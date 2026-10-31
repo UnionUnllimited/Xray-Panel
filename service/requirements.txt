@@ -19,7 +19,7 @@ cryptography>=41.0.0
 pywebpush>=2.0.0
 py-vapid>=1.9.0
 qrcode==8.2
-remnawave==2.8.0
+remnawave==2.7.1
 asyncssh>=2.14.0
 psutil
 resend

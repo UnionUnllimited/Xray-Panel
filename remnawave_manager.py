@@ -189,7 +189,8 @@ class RemnawaveManager:
                 logger.debug(f"[REMNAWAVE] base_expiry не передан, используем текущее время")
             
             # Переводим трафик из ГБ в байты
-            traffic_limit_bytes = total_gb * 1024 * 1024 * 1024 if total_gb > 0 else None
+            # SDK 2.7.x (панель 2.7.4) ждёт целое число байт: дробные ГБ из тарифа не должны ронять запрос
+            traffic_limit_bytes = int(total_gb * 1024 * 1024 * 1024) if total_gb > 0 else None
             
             # Подготавливаем список внутренних сквадов
             active_internal_squads_list = []
@@ -430,7 +431,7 @@ class RemnawaveManager:
             new_traffic_limit_bytes = None
             if traffic_limit_gb is not None:
                 # Если указан абсолютный лимит, используем его
-                new_traffic_limit_bytes = traffic_limit_gb * 1024 * 1024 * 1024 if traffic_limit_gb > 0 else None
+                new_traffic_limit_bytes = int(traffic_limit_gb * 1024 * 1024 * 1024) if traffic_limit_gb > 0 else None
             elif traffic_to_add_gb is not None and traffic_to_add_gb > 0:
                 # Если указано количество для добавления, добавляем к текущему лимиту
                 current_limit_bytes = current_user.traffic_limit_bytes

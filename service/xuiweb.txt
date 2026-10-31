@@ -11,4 +11,4 @@ jinja2
 pytz
 httpx
 loguru
-remnawave==2.8.0
+remnawave==2.7.1
