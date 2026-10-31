@@ -609,10 +609,14 @@ async def login():
         return redirect(url_for('admin.dashboard'))
     if request.method == 'POST':
         form = await request.form
-        password_attempt = form.get('password')
+        password_attempt = form.get('password') or ''
         admin_row = await async_query_db("SELECT value FROM settings WHERE key = 'admin_web_password'", (), one=True)
         moderator_row = await async_query_db("SELECT value FROM settings WHERE key = 'moderator_web_password'", (), one=True)
-        if admin_row and password_attempt == admin_row['value']:
+        # Пустой пароль в базе — не «вход для всех»: без проверки на пустоту
+        # пустая форма совпадала с пустым значением и пускала как администратора.
+        import hmac as _hmac
+        admin_pwd = (admin_row.get('value') if admin_row else '') or ''
+        if admin_pwd and _hmac.compare_digest(password_attempt.encode(), admin_pwd.encode()):
             await login_user(AdminUser(user_id='1', role='admin'))
             session.permanent = True
             await flash('Вы вошли как администратор.', 'success')

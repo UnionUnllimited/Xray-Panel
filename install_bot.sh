@@ -32,6 +32,20 @@ apt update
 wait_apt_lock
 apt install -y python3 python3-venv python3-pip sqlite3
 
+# Установка из git: базы vpn_bot.db ещё нет (в репозитории её не храним).
+# Без неё скрипт ниже молча пропустил бы запись домена, секретного пути и
+# токена — и nginx смотрел бы на один путь, а админка на другой. Создаём
+# таблицу настроек той же схемой, что db_helpers.init_db(); остальное бот
+# засеет сам при первом старте (INSERT OR IGNORE — наши значения останутся).
+if [ ! -f "/root/bot/vpn_bot.db" ]; then
+  sqlite3 /root/bot/vpn_bot.db \
+    "CREATE TABLE IF NOT EXISTS settings (key TEXT PRIMARY KEY, value TEXT, description TEXT);"
+  echo "Создана новая база /root/bot/vpn_bot.db"
+fi
+
+# Значение для SQL-литерала в одинарных кавычках: ' -> ''
+sql_escape() { printf "%s" "${1//\'/\'\'}"; }
+
 # Установка nginx, если не установлен
 if ! command -v nginx >/dev/null 2>&1; then
   echo "nginx не найден, устанавливаю..."
@@ -187,6 +201,48 @@ if [ -z "$BOT_TOKEN_SET" ]; then
   fi
 fi
 
+# ── Пароль веб-админки ────────────────────────────────────────────────────────
+# В дистрибутиве пароль приезжал в готовой базе. На чистой базе его нет,
+# поэтому задаём здесь: без пароля в админку не войти.
+echo ""
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+echo "  Пароль веб-админки"
+echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+ADMIN_PWD_GENERATED=""
+ADMIN_PWD_SET=$(sqlite3 /root/bot/vpn_bot.db "SELECT value FROM settings WHERE key='admin_web_password' LIMIT 1;" 2>/dev/null || true)
+if [ -n "$ADMIN_PWD_SET" ]; then
+  read -rp "  Пароль уже задан. Сменить? [y/N]: " change_pwd
+  [[ "$change_pwd" =~ ^[Yy]$ ]] && ADMIN_PWD_SET=""
+fi
+if [ -z "$ADMIN_PWD_SET" ]; then
+  read -rsp "  Введите пароль (Enter — сгенерировать): " ADMIN_PWD_INPUT; echo
+  if [ -z "$ADMIN_PWD_INPUT" ]; then
+    ADMIN_PWD_INPUT=$(python3 -c 'import secrets; print(secrets.token_urlsafe(12))')
+    ADMIN_PWD_GENERATED="$ADMIN_PWD_INPUT"
+  fi
+  sqlite3 /root/bot/vpn_bot.db \
+    "INSERT INTO settings (key, value) VALUES ('admin_web_password', '$(sql_escape "$ADMIN_PWD_INPUT")')
+     ON CONFLICT(key) DO UPDATE SET value = excluded.value;"
+  echo "  Пароль веб-админки сохранён."
+fi
+
+# ── Администратор бота ────────────────────────────────────────────────────────
+ADMIN_IDS_SET=$(sqlite3 /root/bot/vpn_bot.db "SELECT value FROM settings WHERE key='admin_ids' LIMIT 1;" 2>/dev/null || true)
+if [ -z "$ADMIN_IDS_SET" ]; then
+  echo ""
+  echo "  Telegram ID администратора бота (узнать: @userinfobot)."
+  read -rp "  ID, несколько через запятую (Enter — пропустить): " ADMIN_IDS_INPUT
+  ADMIN_IDS_INPUT="${ADMIN_IDS_INPUT// /}"
+  if [[ "$ADMIN_IDS_INPUT" =~ ^[0-9]+(,[0-9]+)*$ ]]; then
+    sqlite3 /root/bot/vpn_bot.db \
+      "INSERT INTO settings (key, value) VALUES ('admin_ids', '$ADMIN_IDS_INPUT')
+       ON CONFLICT(key) DO UPDATE SET value = excluded.value;"
+    echo "  Администраторы бота: $ADMIN_IDS_INPUT"
+  elif [ -n "$ADMIN_IDS_INPUT" ]; then
+    echo "  Не похоже на ID (нужны цифры через запятую) — пропускаю, задайте в веб-админке."
+  fi
+fi
+
 echo "\nНастраиваю автозапуск сервисов..."
 cp service/vpn-bot.service /etc/systemd/system/
 cp service/vpn-webadmin.service /etc/systemd/system/
@@ -251,6 +307,12 @@ if [ -n "$DOMAIN" ] && [ -n "$ADMIN_SECRET_PATH" ]; then
   echo "  📡  Страница подписки (SUBPAGE):"
   echo "      https://$SUBPAGE_DOMAIN/sub/<uuid>"
 fi
+if [ -n "$ADMIN_PWD_GENERATED" ]; then
+  echo ""
+  echo "  🔑  Пароль веб-админки (сгенерирован, сохраните):"
+  echo "      $ADMIN_PWD_GENERATED"
+fi
 echo ""
+echo "  🔌  Remnawave 2.7.4: веб-админка → Remnawave → Base URL панели и API Token."
 echo "  ℹ️   Токен бота и остальные настройки — в веб-админке."
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"

@@ -23,7 +23,32 @@ _rw_sync_lock = asyncio.Lock()
 _rw_sync_pending = False
 
 # СЛОВАРЬ С НАСТРОЙКАМИ И ТЕКСТАМИ ПО УМОЛЧАНИЮ
-_DEFAULT_SETTINGS = {}
+#
+# Дистрибутив поставлялся с готовой базой vpn_bot.db, а словарь здесь был пуст:
+# ~360 текстов, кнопок и ссылок жили только в той базе. В репозитории базы нет
+# (в ней были чужие токен, пароль и admin_ids), поэтому шаблон вынесен в
+# service/defaults/*.json. Значения пишутся через INSERT OR IGNORE — то, что уже
+# задано в базе (установщиком или в админке), не перетирается.
+_DEFAULTS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'service', 'defaults')
+
+
+def _load_defaults_json(name: str, empty):
+    path = os.path.join(_DEFAULTS_DIR, name)
+    try:
+        with open(path, encoding='utf-8') as f:
+            return json.load(f)
+    except FileNotFoundError:
+        logger.warning(f"Файл настроек по умолчанию не найден: {path}")
+    except Exception as e:
+        logger.error(f"Не удалось прочитать {path}: {e}")
+    return empty
+
+
+_DEFAULT_SETTINGS = {
+    key: (pair[0], pair[1])
+    for key, pair in _load_defaults_json('settings.json', {}).items()
+}
+_DEFAULT_TARIFFS = _load_defaults_json('tariffs.json', [])
 
 # Единая функция подключения к БД с правильными настройками WAL
 @asynccontextmanager
@@ -327,11 +352,49 @@ async def init_db():
             await db.execute('CREATE UNIQUE INDEX IF NOT EXISTS idx_device_limit_changes_payment ON device_limit_changes(payment_id) WHERE payment_id IS NOT NULL')
         except Exception:
             pass
+        await _ensure_seed_schema(db)
         await db.commit()
     await populate_default_settings()
     await populate_default_tariffs()
     await init_referral_bonus_table()
     logger.info("База данных инициализирована.")
+
+async def _ensure_seed_schema(db):
+    """Таблицы и колонки, которые раньше приезжали только с готовой vpn_bot.db.
+
+    Код ими пользуется (тарифы по устройствам и способу оплаты, блокировка
+    клиента, шаблоны новостей, админ для бэкапов), но нигде не создаёт —
+    на чистой базе админка падала бы с «no such column/table». Схема взята
+    из базы дистрибутива один в один.
+    """
+    for ddl in (
+        "ALTER TABLE tariffs ADD COLUMN limit_ip INTEGER DEFAULT 0",
+        "ALTER TABLE tariffs ADD COLUMN payment_method TEXT DEFAULT 'yookassa'",
+        "ALTER TABLE users ADD COLUMN is_blocked INTEGER DEFAULT 0",
+    ):
+        try:
+            await db.execute(ddl)
+        except Exception:
+            pass  # Колонка уже есть
+    await db.execute('''
+        CREATE TABLE IF NOT EXISTS news_templates (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            body TEXT NOT NULL,
+            created_at TEXT NOT NULL,
+            custom_btn_text TEXT, custom_btn_url TEXT, updated_at TEXT,
+            media_kind TEXT, media_file_id TEXT, media_local_path TEXT, media_meta_json TEXT
+        )
+    ''')
+    await db.execute('''
+        CREATE TABLE IF NOT EXISTS backup_settings (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            admin_telegram_id TEXT,
+            schedule TEXT,
+            enabled INTEGER DEFAULT 1,
+            last_backup TEXT
+        )
+    ''')
 
 async def populate_default_settings():
     async with get_db_connection_safe() as db:
@@ -445,7 +508,17 @@ async def populate_default_settings():
 async def populate_default_tariffs():
     async with get_db_connection_safe() as db:
         cursor = await db.execute("SELECT COUNT(*) FROM tariffs")
-        if (await cursor.fetchone())[0] == 0:
+        if (await cursor.fetchone())[0] == 0 and _DEFAULT_TARIFFS:
+            # Сетка тарифов из дистрибутива: сроки × устройства × способы оплаты.
+            cols = ('name', 'days', 'price', 'currency', 'is_active', 'sort_order',
+                    'description', 'limit_ip', 'payment_method', 'traffic_gb')
+            await db.executemany(
+                f"INSERT INTO tariffs ({', '.join(cols)}) VALUES ({', '.join('?' * len(cols))})",
+                [tuple(t.get(c) for c in cols) for t in _DEFAULT_TARIFFS],
+            )
+            await db.commit()
+            logger.info(f"Созданы тарифы по умолчанию: {len(_DEFAULT_TARIFFS)}.")
+        elif (await (await db.execute("SELECT COUNT(*) FROM tariffs")).fetchone())[0] == 0:
             await db.execute('''
                 INSERT INTO tariffs (name, days, price, currency, is_active, sort_order, description)
                 VALUES (?, ?, ?, ?, ?, ?, ?)

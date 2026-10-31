@@ -1,0 +1,1458 @@
+{
+ "admin_ids": [
+  "",
+  "JSON список ID администраторов бота, например [123, 456]"
+ ],
+ "admin_ip_whitelist": [
+  "",
+  "Список разрешённых IP/CIDR через запятую (например: 1.2.3.4, 5.6.7.0/24, 2001:db8::/32). Применяется только если admin_ip_whitelist_enabled=1."
+ ],
+ "admin_ip_whitelist_enabled": [
+  "0",
+  "Включить ограничение доступа в веб-админку по IP-адресам (0/1). При включении: запросы извне белого списка получают 404. Loopback (127.0.0.1, ::1) разрешён всегда. Сброс через SQLite: UPDATE settings SET value='0' WHERE key='admin_ip_whitelist_enabled'"
+ ],
+ "admin_text_promo_code_created": [
+  "✅ Создан новый промокод:\r\n\r\n<code>{code}</code>",
+  "Админ-сообщение о создании промокода. Переменная: {code}"
+ ],
+ "admin_text_promo_codes_menu": [
+  "Меню управления промокодами",
+  "Заголовок меню промокодов в админке"
+ ],
+ "android_app_link": [
+  "https://play.google.com/store/apps/details?id=com.example.v2raytun",
+  "Ссылка на приложение для Android"
+ ],
+ "announce_text": [
+  "🚀 Ультрабыстрый VPN до 1000 Мб/с!",
+  "Текст объявления для Happ клиента (до 200 символов)"
+ ],
+ "app_link_android": [
+  "https://play.google.com/store/apps/details?id=com.happproxy",
+  "Ссылка на приложение Android"
+ ],
+ "app_link_android_apk": [
+  "https://github.com/Happ-proxy/happ-android/releases/latest/download/Happ.apk",
+  "Ссылка на APK файл Android"
+ ],
+ "app_link_hiddify_android": [
+  "https://play.google.com/store/apps/details?id=app.hiddify.com&pli=1",
+  "Ссылка на приложение Hiddify Android"
+ ],
+ "app_link_hiddify_ios": [
+  "https://apps.apple.com/us/app/hiddify-proxy-vpn/id6596777532?platform=iphone",
+  "Ссылка на приложение Hiddify iOS"
+ ],
+ "app_link_ios": [
+  "https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973",
+  "Ссылка на приложение iOS"
+ ],
+ "app_link_ios_global": [
+  "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215",
+  "Ссылка на приложение iOS (глобальная версия)"
+ ],
+ "app_link_linux": [
+  "https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-Linux-x64.AppImage",
+  "Ссылка на приложение Linux"
+ ],
+ "app_link_mac": [
+  "https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-MacOS.dmg",
+  "Ссылка на приложение macOS"
+ ],
+ "app_link_v2raytun_android": [
+  "https://play.google.com/store/apps/details?id=com.v2raytun.android&hl=ru",
+  "Ссылка на приложение V2RayTun Android"
+ ],
+ "app_link_v2raytun_ios": [
+  "https://apps.apple.com/ru/app/v2raytun/id6476628951",
+  "Ссылка на приложение V2RayTun iOS"
+ ],
+ "app_link_v2raytun_mac": [
+  "https://apps.apple.com/en/app/v2raytun/id6476628951",
+  "Ссылка на V2RayTun для macOS (App Store)"
+ ],
+ "app_link_v2raytun_windows": [
+  "https://storage.v2raytun.com/v2RayTun_Setup.exe",
+  "Ссылка на V2RayTun для Windows"
+ ],
+ "app_link_windows": [
+  "https://github.com/hiddify/hiddify-app/releases/latest/download/Hiddify-Windows-Setup-x64.Msix",
+  "Ссылка на приложение Windows"
+ ],
+ "bot_channel_link": [
+  "",
+  "Ссылка на канал бота (показывает кнопку \"Наш канал\" в главном меню)"
+ ],
+ "bot_custom_url": [
+  "",
+  "Кастомный URL (показывает кнопку \"КастомURL\" в главном меню). Текст кнопки редактируется ниже."
+ ],
+ "bot_maintenance_enabled": [
+  "0",
+  "Сервисный режим: бот отвечает заглушкой на сообщения и кнопки (0/1)"
+ ],
+ "bot_maintenance_message": [
+  "К сожалению, бот находится на технических работах. Попробуйте позже.",
+  "Текст заглушки сервисного режима"
+ ],
+ "bot_protection_enabled": [
+  "1",
+  "Включить защиту от ботов (0/1)"
+ ],
+ "bot_protection_success_text": [
+  "✅ <b>Правильно!</b> ⏳ Идет регистрация пробного периода, пожалуйста подождите...",
+  "Текст при правильном ответе"
+ ],
+ "bot_protection_text": [
+  "🤖 <b>Защита от ботов</b> Для продолжения решите простую задачу:<b>{question}</b>",
+  "Текст для защиты от ботов"
+ ],
+ "bot_protection_wrong_text": [
+  "❌ <b>Неправильно!</b> Попробуйте еще раз:<b>{question}</b>",
+  "Текст при неправильном ответе"
+ ],
+ "bot_rate_limit_callback_max": [
+  "30",
+  "Максимальное количество нажатий кнопок от одного пользователя за период (rate limiting)"
+ ],
+ "bot_rate_limit_callback_window": [
+  "60",
+  "Период времени в секундах для ограничения нажатий кнопок (rate limiting)"
+ ],
+ "bot_rate_limit_enabled": [
+  "1",
+  "Включить ограничение частоты запросов (rate limiting) для защиты от спама"
+ ],
+ "bot_rate_limit_message_max": [
+  "10",
+  "Максимальное количество сообщений от одного пользователя за период (rate limiting)"
+ ],
+ "bot_rate_limit_message_text": [
+  "⏳ Слишком много сообщений. Пожалуйста, подождите немного перед следующим запросом.",
+  "Текст сообщения при превышении лимита запросов"
+ ],
+ "bot_rate_limit_message_window": [
+  "60",
+  "Период времени в секундах для ограничения сообщений (rate limiting)"
+ ],
+ "bot_token": [
+  "",
+  "Токен вашего Telegram бота"
+ ],
+ "bot_username": [
+  "",
+  "Имя Telegram-бота без @ для формирования ссылки партнёра"
+ ],
+ "btn_about": [
+  "ℹ️ О нас",
+  "Кнопка информации о сервисе"
+ ],
+ "btn_about_service": [
+  "ℹ️ О нас",
+  "Кнопка \"О сервисе\""
+ ],
+ "btn_about_service__icon": [
+  "",
+  "icon_custom_emoji_id: О сервисе"
+ ],
+ "btn_about_service__style": [
+  "",
+  "Стиль кнопки: О сервисе"
+ ],
+ "btn_activate_code": [
+  "🎫 Оплатить кодом",
+  "Кнопка активации промокода"
+ ],
+ "btn_activate_code__icon": [
+  "",
+  "icon_custom_emoji_id: Оплатить кодом"
+ ],
+ "btn_activate_code__style": [
+  "",
+  "Стиль кнопки: Оплатить кодом"
+ ],
+ "btn_android": [
+  "Android",
+  "Текст кнопки: Android"
+ ],
+ "btn_android__enabled": [
+  "1",
+  "Видимость кнопки: Android"
+ ],
+ "btn_android__icon": [
+  "",
+  "icon_custom_emoji_id: Android"
+ ],
+ "btn_android__kind": [
+  "webapp",
+  "Режим открытия (url|webapp): Android"
+ ],
+ "btn_android__style": [
+  "",
+  "Стиль кнопки: Android"
+ ],
+ "btn_back": [
+  "⬅️ Назад",
+  "Кнопка назад"
+ ],
+ "btn_back__icon": [
+  "",
+  "icon_custom_emoji_id: Назад (внутри подменю)"
+ ],
+ "btn_back__style": [
+  "",
+  "Стиль кнопки: Назад (внутри подменю)"
+ ],
+ "btn_back_to_main": [
+  "⬅️ Вернуться в главное меню",
+  "Кнопка возврата в главное меню"
+ ],
+ "btn_back_to_main__icon": [
+  "",
+  "icon_custom_emoji_id: Назад в главное меню"
+ ],
+ "btn_back_to_main__style": [
+  "",
+  "Стиль кнопки: Назад в главное меню"
+ ],
+ "btn_bot_channel": [
+  "📣 Наш канал",
+  "Текст кнопки: Наш канал (ссылка задаётся в bot_channel_link)"
+ ],
+ "btn_bot_channel__icon": [
+  "",
+  "icon_custom_emoji_id: Наш канал"
+ ],
+ "btn_bot_channel__style": [
+  "",
+  "Стиль кнопки: Наш канал"
+ ],
+ "btn_bot_custom_url": [
+  "🔗 КастомURL",
+  "Текст кнопки: КастомURL (ссылка задаётся в bot_custom_url)"
+ ],
+ "btn_bot_custom_url__icon": [
+  "",
+  "icon_custom_emoji_id: КастомURL"
+ ],
+ "btn_bot_custom_url__style": [
+  "",
+  "Стиль кнопки: КастомURL"
+ ],
+ "btn_check_payment": [
+  "🔍 Проверить платеж",
+  "Кнопка проверки платежа"
+ ],
+ "btn_connect": [
+  "Подключиться",
+  "Текст кнопки: Подключиться (WebApp)"
+ ],
+ "btn_connect__enabled": [
+  "1",
+  "Видимость кнопки: Подключиться (WebApp)"
+ ],
+ "btn_connect__icon": [
+  "",
+  "icon_custom_emoji_id: Подключиться (WebApp)"
+ ],
+ "btn_connect__kind": [
+  "webapp",
+  "Режим открытия (url|webapp): Подключиться (WebApp)"
+ ],
+ "btn_connect__style": [
+  "",
+  "Стиль кнопки: Подключиться (WebApp)"
+ ],
+ "btn_device_upgrade": [
+  "📱 Расширить лимит устройств",
+  "Текст кнопки: Расширить лимит устройств"
+ ],
+ "btn_device_upgrade__icon": [
+  "",
+  "icon_custom_emoji_id: Расширить лимит устройств"
+ ],
+ "btn_device_upgrade__style": [
+  "",
+  "Стиль кнопки: Расширить лимит устройств"
+ ],
+ "btn_free_renew": [
+  "🆓 Продлить подписку бесплатно",
+  "Текст кнопки: Продлить бесплатно (newsletter)"
+ ],
+ "btn_free_renew__icon": [
+  "",
+  "icon_custom_emoji_id: Продлить бесплатно (newsletter)"
+ ],
+ "btn_free_renew__style": [
+  "",
+  "Стиль кнопки: Продлить бесплатно (newsletter)"
+ ],
+ "btn_iphone": [
+  "iPhone",
+  "Текст кнопки: iPhone"
+ ],
+ "btn_iphone__enabled": [
+  "1",
+  "Видимость кнопки: iPhone"
+ ],
+ "btn_iphone__icon": [
+  "",
+  "icon_custom_emoji_id: iPhone"
+ ],
+ "btn_iphone__kind": [
+  "webapp",
+  "Режим открытия (url|webapp): iPhone"
+ ],
+ "btn_iphone__style": [
+  "",
+  "Стиль кнопки: iPhone"
+ ],
+ "btn_main_menu": [
+  "🏠 Главное меню",
+  "Кнопка главного меню"
+ ],
+ "btn_menu_my_subscription": [
+  "Моя подписка",
+  "Текст кнопки меню Mini App (≤12 символов)"
+ ],
+ "btn_my_devices": [
+  "📱 Мои устройства",
+  "Текст кнопки: Мои устройства"
+ ],
+ "btn_my_devices__icon": [
+  "",
+  "icon_custom_emoji_id: Мои устройства"
+ ],
+ "btn_my_devices__style": [
+  "",
+  "Стиль кнопки: Мои устройства"
+ ],
+ "btn_my_referrals": [
+  "👥 Мои рефералы",
+  "Текст кнопки: Мои рефералы (список)"
+ ],
+ "btn_my_referrals__icon": [
+  "",
+  "icon_custom_emoji_id: Мои рефералы (список)"
+ ],
+ "btn_my_referrals__style": [
+  "",
+  "Стиль кнопки: Мои рефералы (список)"
+ ],
+ "btn_partner_accruals": [
+  "📜 История начислений",
+  "Текст кнопки: История начислений (партнёрка)"
+ ],
+ "btn_partner_accruals__icon": [
+  "",
+  "icon_custom_emoji_id: История начислений (партнёрка)"
+ ],
+ "btn_partner_accruals__style": [
+  "",
+  "Стиль кнопки: История начислений (партнёрка)"
+ ],
+ "btn_partner_program": [
+  "🤝 Партнёрская программа",
+  "Текст кнопки Партнёрская программа"
+ ],
+ "btn_partner_program__icon": [
+  "",
+  "icon_custom_emoji_id: Партнёрская программа"
+ ],
+ "btn_partner_program__style": [
+  "",
+  "Стиль кнопки: Партнёрская программа"
+ ],
+ "btn_partner_withdraw": [
+  "💸 Запросить вывод",
+  "Текст кнопки: Запросить вывод (партнёрка)"
+ ],
+ "btn_partner_withdraw__icon": [
+  "",
+  "icon_custom_emoji_id: Запросить вывод (партнёрка)"
+ ],
+ "btn_partner_withdraw__style": [
+  "",
+  "Стиль кнопки: Запросить вывод (партнёрка)"
+ ],
+ "btn_payment_cryptobot": [
+  "💎 CryptoBot",
+  "Текст кнопки оплаты: CryptoBot"
+ ],
+ "btn_payment_cryptobot__icon": [
+  "",
+  "icon_custom_emoji_id: CryptoBot"
+ ],
+ "btn_payment_cryptobot__style": [
+  "",
+  "Стиль кнопки: CryptoBot"
+ ],
+ "btn_payment_history": [
+  "📖 История платежей",
+  "Текст кнопки: История платежей"
+ ],
+ "btn_payment_history__icon": [
+  "",
+  "icon_custom_emoji_id: История платежей"
+ ],
+ "btn_payment_history__style": [
+  "",
+  "Стиль кнопки: История платежей"
+ ],
+ "btn_payment_manual": [
+  "💸 CloudTips(СБП-Картой)",
+  "Текст кнопки оплаты: Перевод/CloudTips"
+ ],
+ "btn_payment_manual__icon": [
+  "",
+  "icon_custom_emoji_id: CloudTips (СБП)"
+ ],
+ "btn_payment_manual__style": [
+  "",
+  "Стиль кнопки: CloudTips (СБП)"
+ ],
+ "btn_payment_pay_link": [
+  "💳 Оплатить",
+  "Текст кнопки: Перейти к оплате (ссылка)"
+ ],
+ "btn_payment_pay_link__icon": [
+  "",
+  "icon_custom_emoji_id: Перейти к оплате (ссылка)"
+ ],
+ "btn_payment_pay_link__style": [
+  "",
+  "Стиль кнопки: Перейти к оплате (ссылка)"
+ ],
+ "btn_payment_platega": [
+  "🏦 Platega (СБП)",
+  "Текст кнопки оплаты: Platega (СБП)"
+ ],
+ "btn_payment_platega__icon": [
+  "",
+  "icon_custom_emoji_id: Platega (СБП)"
+ ],
+ "btn_payment_platega__style": [
+  "",
+  "Стиль кнопки: Platega (СБП)"
+ ],
+ "btn_payment_tgstar": [
+  "⭐️ TG Star",
+  "Текст кнопки оплаты: Telegram Stars"
+ ],
+ "btn_payment_tgstar__icon": [
+  "",
+  "icon_custom_emoji_id: Telegram Stars"
+ ],
+ "btn_payment_tgstar__style": [
+  "",
+  "Стиль кнопки: Telegram Stars"
+ ],
+ "btn_payment_wata": [
+  "💳 Wata",
+  "Текст кнопки: Wata"
+ ],
+ "btn_payment_wata__icon": [
+  "",
+  "icon_custom_emoji_id: Wata"
+ ],
+ "btn_payment_wata__style": [
+  "",
+  "Стиль кнопки: Wata"
+ ],
+ "btn_payment_yookassa": [
+  "💳 YooKassa",
+  "Текст кнопки оплаты: YooKassa"
+ ],
+ "btn_payment_yookassa__icon": [
+  "",
+  "icon_custom_emoji_id: YooKassa"
+ ],
+ "btn_payment_yookassa__style": [
+  "",
+  "Стиль кнопки: YooKassa"
+ ],
+ "btn_payment_yoomoney": [
+  "💰 YooMoney",
+  "Текст кнопки оплаты: YooMoney"
+ ],
+ "btn_payment_yoomoney__icon": [
+  "",
+  "icon_custom_emoji_id: YooMoney"
+ ],
+ "btn_payment_yoomoney__style": [
+  "",
+  "Стиль кнопки: YooMoney"
+ ],
+ "btn_privacy_policy": [
+  "🔒 Политика конфиденциальности",
+  "Текст кнопки: Политика конфиденциальности (кнопка в О сервисе)"
+ ],
+ "btn_privacy_policy__icon": [
+  "",
+  "icon_custom_emoji_id: Политика конфиденциальности"
+ ],
+ "btn_privacy_policy__style": [
+  "",
+  "Стиль кнопки: Политика конфиденциальности"
+ ],
+ "btn_referral": [
+  "🎁 Бонусы",
+  "Кнопка реферальной программы"
+ ],
+ "btn_referral__icon": [
+  "",
+  "icon_custom_emoji_id: Реферальная программа"
+ ],
+ "btn_referral__style": [
+  "",
+  "Стиль кнопки: Реферальная программа"
+ ],
+ "btn_referral_free_days": [
+  "🎁 Бесплатные дни",
+  "Текст кнопки: Бесплатные дни (рефералы)"
+ ],
+ "btn_referral_free_days__icon": [
+  "",
+  "icon_custom_emoji_id: Бесплатные дни (после оплаты)"
+ ],
+ "btn_referral_free_days__style": [
+  "",
+  "Стиль кнопки: Бесплатные дни (после оплаты)"
+ ],
+ "btn_referral_share": [
+  "📤 Поделиться",
+  "Текст кнопки: Поделиться (рефералы)"
+ ],
+ "btn_referral_share__icon": [
+  "",
+  "icon_custom_emoji_id: Поделиться (рефералы)"
+ ],
+ "btn_referral_share__style": [
+  "",
+  "Стиль кнопки: Поделиться (рефералы)"
+ ],
+ "btn_renew_30": [
+  "Продлить на 30 дней",
+  "Текст кнопки продления на 30 дней (CloudTips)"
+ ],
+ "btn_renew_30__icon": [
+  "",
+  "icon_custom_emoji_id: Продлить на 30 дней (CloudTips)"
+ ],
+ "btn_renew_30__style": [
+  "",
+  "Стиль кнопки: Продлить на 30 дней (CloudTips)"
+ ],
+ "btn_renew_60": [
+  "Продлить на 60 дней",
+  "Текст кнопки продления на 60 дней (CloudTips)"
+ ],
+ "btn_renew_60__icon": [
+  "",
+  "icon_custom_emoji_id: Продлить на 60 дней (CloudTips)"
+ ],
+ "btn_renew_60__style": [
+  "",
+  "Стиль кнопки: Продлить на 60 дней (CloudTips)"
+ ],
+ "btn_renew_90": [
+  "Продлить на 90 дней",
+  "Текст кнопки продления на 90 дней (CloudTips)"
+ ],
+ "btn_renew_90__icon": [
+  "",
+  "icon_custom_emoji_id: Продлить на 90 дней (CloudTips)"
+ ],
+ "btn_renew_90__style": [
+  "",
+  "Стиль кнопки: Продлить на 90 дней (CloudTips)"
+ ],
+ "btn_renew_sub": [
+  "💳 Продлить ",
+  "Кнопка продления подписки"
+ ],
+ "btn_renew_sub__icon": [
+  "",
+  "icon_custom_emoji_id: Продлить подписку"
+ ],
+ "btn_renew_sub__style": [
+  "",
+  "Стиль кнопки: Продлить подписку"
+ ],
+ "btn_support": [
+  "💬 Поддержка",
+  "Кнопка \"Поддержка\""
+ ],
+ "btn_support__icon": [
+  "",
+  "icon_custom_emoji_id: Поддержка"
+ ],
+ "btn_support__style": [
+  "",
+  "Стиль кнопки: Поддержка"
+ ],
+ "btn_support_custom_link": [
+  "📞 Кастомная поддержка",
+  "Текст кнопки кастомной ссылки поддержки (для ссылки выше)"
+ ],
+ "btn_support_custom_link__icon": [
+  "",
+  "icon_custom_emoji_id: Кастомная ссылка поддержки"
+ ],
+ "btn_support_custom_link__style": [
+  "",
+  "Стиль кнопки: Кастомная ссылка поддержки"
+ ],
+ "btn_support_link": [
+  "💬 Перейти в поддержку",
+  "Текст кнопки перехода в поддержку (для ссылки выше)"
+ ],
+ "btn_support_link__icon": [
+  "",
+  "icon_custom_emoji_id: Перейти в поддержку (ссылка)"
+ ],
+ "btn_support_link__style": [
+  "",
+  "Стиль кнопки: Перейти в поддержку (ссылка)"
+ ],
+ "btn_traffic_renewal": [
+  "📈 Докупить гигабайты",
+  "Текст кнопки: Докупить гигабайты"
+ ],
+ "btn_traffic_renewal__icon": [
+  "",
+  "icon_custom_emoji_id: Докупить гигабайты"
+ ],
+ "btn_traffic_renewal__style": [
+  "",
+  "Стиль кнопки: Докупить гигабайты"
+ ],
+ "btn_user_agreement": [
+  "📄 Пользовательское соглашение",
+  "Текст кнопки: Пользовательское соглашение (кнопка в О сервисе)"
+ ],
+ "btn_user_agreement__icon": [
+  "",
+  "icon_custom_emoji_id: Пользовательское соглашение"
+ ],
+ "btn_user_agreement__style": [
+  "",
+  "Стиль кнопки: Пользовательское соглашение"
+ ],
+ "btn_website_access": [
+  "🌐 Личный кабинет",
+  "Текст кнопки: Личный кабинет (главное меню)"
+ ],
+ "btn_website_access__icon": [
+  "",
+  "icon_custom_emoji_id: Личный кабинет (главное меню)"
+ ],
+ "btn_website_access__style": [
+  "",
+  "Стиль кнопки: Личный кабинет (главное меню)"
+ ],
+ "btn_website_link_email": [
+  "📧 Привязать email",
+  "Текст кнопки: Привязать email (в кабинете)"
+ ],
+ "btn_website_link_email__icon": [
+  "",
+  "icon_custom_emoji_id: Привязать email (в кабинете)"
+ ],
+ "btn_website_link_email__style": [
+  "",
+  "Стиль кнопки: Привязать email (в кабинете)"
+ ],
+ "btn_website_open": [
+  "🌐 Открыть личный кабинет",
+  "Текст кнопки: Открыть личный кабинет (magic link)"
+ ],
+ "btn_website_open__icon": [
+  "",
+  "icon_custom_emoji_id: Открыть личный кабинет (magic link)"
+ ],
+ "btn_website_open__style": [
+  "",
+  "Стиль кнопки: Открыть личный кабинет (magic link)"
+ ],
+ "channel_subscription_enabled": [
+  "0",
+  "Включить обязательную подписку на канал при регистрации (0/1)"
+ ],
+ "channel_subscription_message": [
+  "Для получения пробного периода необходимо подписаться на наш канал.",
+  "Текст сообщения при запросе подписки на канал"
+ ],
+ "channel_subscription_username": [
+  "",
+  "Username или ID канала для обязательной подписки (например: @my_channel или -1001234567890)"
+ ],
+ "cleanup_disabled_clients_enabled": [
+  "1",
+  "Ежедневная очистка отключенных клиентов на всех серверах 3X-UI (выполняется в 3:00 ночи по МСК)"
+ ],
+ "connect_page_url": [
+  "https://bot.domain.ru",
+  "URL страницы подключения"
+ ],
+ "cryptobot_token": [
+  "",
+  "API-ключ (токен) для CryptoBot"
+ ],
+ "default_subscription_mode": [
+  "multi",
+  "Режим подписки по умолчанию (one/multi)"
+ ],
+ "device_upgrade_enabled": [
+  "1",
+  "Включить продажу расширения лимита устройств клиентам (0/1)"
+ ],
+ "device_upgrade_max_limit": [
+  "10",
+  "Максимальный лимит, до которого клиент может расшириться через бота"
+ ],
+ "device_upgrade_min_days_left": [
+  "3",
+  "Минимум дней подписки, чтобы разрешить апгрейд"
+ ],
+ "device_upgrade_min_price": [
+  "30.0",
+  "Минимальный чек апгрейда (₽), цена ниже округляется вверх"
+ ],
+ "device_upgrade_price_per_slot_per_day": [
+  "5.0",
+  "Цена за 1 устройство в 1 день (₽)"
+ ],
+ "email_domain": [
+  "bot",
+  "Для email для X-UI (Рекомендую не менять)"
+ ],
+ "free_renewal_days": [
+  "3",
+  "Количество дней для бесплатного продления подписки через кнопку \"Продлить подписку бесплатно\" в новостях"
+ ],
+ "group_connect_enabled": [
+  "1",
+  "Группа кнопок (connect) включена/выключена"
+ ],
+ "happ_custom_headers": [
+  "{}",
+  "Дополнительные HTTP заголовки для Happ (JSON формат: {\"Header-Name\": \"value\"})"
+ ],
+ "happ_routing_settings": [
+  "",
+  "Happ routing ссылка (формат: happ://routing/onadd/<base64>)"
+ ],
+ "hwid_limit_enabled": [
+  "1",
+  "Включить лимит устройств по HWID (только SUBPAGE)"
+ ],
+ "ins_video_file_id": [
+  "",
+  ""
+ ],
+ "ins_video_hash": [
+  "",
+  ""
+ ],
+ "ios_app_link": [
+  "https://apps.apple.com/app/id1234567890",
+  "Ссылка на приложение для iOS"
+ ],
+ "main_menu_layout": [
+  "[[\"btn_connect\"], [\"btn_iphone\", \"btn_android\"], [\"btn_website_access\"], [\"btn_renew_sub\"], [\"btn_traffic_renewal\"], [\"btn_device_upgrade\"], [\"btn_referral\", \"btn_support\"], [\"btn_about_service\"], [\"btn_bot_custom_url\"], [\"btn_bot_channel\"]]",
+  "Раскладка главного меню бота (JSON: массив рядов с ключами кнопок)"
+ ],
+ "manual_transfer_link_30": [
+  "",
+  "Ссылка для оплаты перевода на 30 дней"
+ ],
+ "manual_transfer_link_60": [
+  "",
+  "Ссылка для оплаты перевода на 60 дней"
+ ],
+ "manual_transfer_link_90": [
+  "",
+  "Ссылка для оплаты перевода на 90 дней"
+ ],
+ "moderator_sections": [
+  "[\"users\", \"payments\", \"tariffs\"]",
+  "Разделы, видимые модератору (JSON)"
+ ],
+ "moderator_web_password": [
+  "",
+  "Пароль для входа модератора в веб-админку"
+ ],
+ "partner_min_withdraw_rub": [
+  "500",
+  "Минимальная сумма вывода партнёрского баланса в ₽ (кнопка в боте)"
+ ],
+ "partner_percent_rub": [
+  "15",
+  "Процент партнёра в RUB от успешных платежей приглашённых (0-100)"
+ ],
+ "payment_methods_order": [
+  "[\"wata\",\"platega\",\"yookassa\",\"tgstar\",\"cryptobot\",\"yoomoney\",\"manual\",\"promo\"]",
+  "Порядок платёжных методов в боте и кабинете (JSON-массив id)"
+ ],
+ "platega_api_secret": [
+  "",
+  "Platega: API Secret"
+ ],
+ "platega_enabled_methods": [
+  "[2]",
+  "Platega: Методы оплаты (JSON массив: 2=СБП, 10=Карты RUB, 11=Карточный эквайринг, 12=Международный эквайринг, 13=Криптовалюта) Например: [2, 10]"
+ ],
+ "platega_merchant_id": [
+  "",
+  "Platega: MerchantId"
+ ],
+ "profile_update_interval": [
+  "1",
+  "Интервал обновления профиля для Happ клиента (в часах)"
+ ],
+ "project_name": [
+  "3XUIStore",
+  "Название проекта, отображаемое пользователям"
+ ],
+ "promo_code_subscription_days": [
+  "30",
+  "Количество дней подписки, которое дает промокод"
+ ],
+ "ref_bonus_on_join_days": [
+  "3",
+  "Бонус дней пригласившему за регистрацию друга"
+ ],
+ "ref_bonus_on_payment_days": [
+  "14",
+  "Бонус дней пригласившему за первый платёж друга"
+ ],
+ "referral_limit_per_day": [
+  "3",
+  "Лимит рефералов в день (по умолчанию: 3)"
+ ],
+ "remnawave_api_token": [
+  "",
+  "Remnawave: API Token (JWT токен)"
+ ],
+ "remnawave_auto_traffic_renewal_enabled": [
+  "0",
+  "Автоматически продлевать трафик при продлении подписки Remnawave (0/1)"
+ ],
+ "remnawave_base_url": [
+  "",
+  "Remnawave: Base URL (например: https://rem.tunnel.ru)"
+ ],
+ "remnawave_default_internal_squad_uuid": [
+  "",
+  "Remnawave: UUID внутреннего сквада по умолчанию"
+ ],
+ "remnawave_default_traffic_limit_gb": [
+  "0",
+  "Remnawave: Лимит трафика по умолчанию в ГБ (0 = безлимит)"
+ ],
+ "remnawave_enabled": [
+  "1",
+  "Включить Remnawave (0/1)"
+ ],
+ "remnawave_health_check_enabled": [
+  "1",
+  "Проверять доступность панели Remnawave и уведомлять администратора (0/1)"
+ ],
+ "remnawave_show_traffic_stub": [
+  "0",
+  "Показывать заглушку с трафиком Remnawave в подписке (0/1)"
+ ],
+ "remnawave_traffic_exhausted_squad_uuid": [
+  "",
+  "Remnawave: UUID squad для смены LIMIT на NO LIMIT(если пусто, squad не меняется)"
+ ],
+ "remnawave_traffic_renewal_price_rub": [
+  "100",
+  "Цена продления трафика в рублях (за количество из remnawave_default_traffic_limit_gb)"
+ ],
+ "remnawave_traffic_stub_text": [
+  "👇Доп серверы {used}/{limit}GB {emoji}",
+  "Текст заглушки с трафиком Remnawave. Переменные: {used} - использовано, {limit} - лимит, {emoji} - эмодзи"
+ ],
+ "remnawave_webhook_enabled": [
+  "0",
+  "Принимать вебхуки от Remnawave"
+ ],
+ "remnawave_webhook_secret": [
+  "",
+  "Remnawave: Секретный ключ для вебхуков (используется для проверки подписи)"
+ ],
+ "server_health_check_enabled": [
+  "1",
+  "Включить автоматическую проверку здоровья 3X-UI серверов (0/1)"
+ ],
+ "server_health_check_interval_minutes": [
+  "20",
+  "Интервал проверки здоровья серверов в минутах"
+ ],
+ "show_change_server_button": [
+  "1",
+  "Показывать кнопку \"Сменить сервер\" (0/1)"
+ ],
+ "show_multi_server_button": [
+  "0",
+  "Показывать кнопку \"Включить режим Локаций\" (0/1)"
+ ],
+ "show_partner_program_button": [
+  "1",
+  "Показывать кнопку Партнёрская программа (0/1)"
+ ],
+ "show_payment_cryptobot": [
+  "0",
+  "Показывать метод оплаты CryptoBot"
+ ],
+ "show_payment_manual": [
+  "0",
+  "Показывать метод оплаты Переводом (0/1)"
+ ],
+ "show_payment_platega": [
+  "0",
+  "Показывать метод оплаты Platega (СБП/QR)"
+ ],
+ "show_payment_promo_code": [
+  "1",
+  "Показывать метод оплаты \"Оплатить кодом\""
+ ],
+ "show_payment_tgstar": [
+  "1",
+  "Показывать метод оплаты TG Star"
+ ],
+ "show_payment_wata": [
+  "0",
+  "Показывать метод оплаты Wata (карты / СБП по терминалу токена)"
+ ],
+ "show_payment_yookassa": [
+  "0",
+  "Показывать метод оплаты YooKassa"
+ ],
+ "show_payment_yoomoney": [
+  "0",
+  "Показывать метод оплаты YooMoney"
+ ],
+ "show_website_button": [
+  "0",
+  "Показывать кнопку «Доступ к сайту» в главном меню бота (0/1)"
+ ],
+ "ssh_inbound_template_vless_reality_tcp": [
+  "{\"port\": 443, \"protocol\": \"vless\", \"settings\": {\"clients\": [], \"decryption\": \"none\", \"encryption\": \"none\", \"testseed\": [900, 500, 900, 256]}, \"streamSettings\": {\"network\": \"tcp\", \"security\": \"reality\", \"externalProxy\": [], \"realitySettings\": {\"show\": false, \"xver\": 0, \"target\": \"github.com:443\", \"serverNames\": [\"github.com\"], \"privateKey\": \"0Hd5OQ8HLPRDjCBmnYEA3d1xiix1llT_U6wqvXXNukg\", \"minClientVer\": \"\", \"maxClientVer\": \"\", \"maxTimediff\": 0, \"shortIds\": [\"086007\"], \"mldsa65Seed\": \"\", \"settings\": {\"publicKey\": \"VH-4z1TvkJLyH9cgwdrhvMevxr3PltSBnMk43X6pi2U\", \"fingerprint\": \"firefox\", \"serverName\": \"\", \"spiderX\": \"\", \"mldsa65Verify\": \"\"}}, \"tcpSettings\": {\"acceptProxyProtocol\": false, \"header\": {\"type\": \"none\"}}}, \"sniffing\": {\"enabled\": true, \"destOverride\": [\"http\", \"tls\", \"quic\", \"fakedns\"], \"metadataOnly\": false, \"routeOnly\": false}, \"remark\": \"\", \"enable\": true}",
+  "Шаблон инбаунда для SSH установки: VLESS + Reality (TCP)"
+ ],
+ "ssh_inbound_template_vless_reality_xhttp": [
+  "{\"port\": 443, \"protocol\": \"vless\", \"settings\": {\"clients\": [], \"decryption\": \"none\", \"encryption\": \"none\", \"testseed\": [900, 500, 900, 256]}, \"streamSettings\": {\"network\": \"xhttp\", \"security\": \"reality\", \"externalProxy\": [], \"realitySettings\": {\"show\": false, \"xver\": 0, \"target\": \"github.com:443\", \"serverNames\": [\"github.com\"], \"privateKey\": \"WGr0S5V-Klt_AZwDm-ZverQal4tLsdEAcVvgoc_Ma3s\", \"minClientVer\": \"\", \"maxClientVer\": \"\", \"maxTimediff\": 0, \"shortIds\": [\"a1765ed7\"], \"mldsa65Seed\": \"\", \"settings\": {\"publicKey\": \"JH_FClVzuphLIv1pLqqjKvJiJuWY0GhsxHqN9_MuggU\", \"fingerprint\": \"chrome\", \"serverName\": \"\", \"spiderX\": \"\", \"mldsa65Verify\": \"\"}}, \"xhttpSettings\": {\"path\": \"/\", \"host\": \"\", \"headers\": {}, \"scMaxBufferedPosts\": 30, \"scMaxEachPostBytes\": \"1000000\", \"scStreamUpServerSecs\": \"20-80\", \"noSSEHeader\": false, \"xPaddingBytes\": \"100-1000\", \"mode\": \"auto\"}}, \"sniffing\": {\"enabled\": true, \"destOverride\": [\"http\", \"tls\", \"quic\", \"fakedns\"], \"metadataOnly\": false, \"routeOnly\": false}, \"remark\": \"\", \"enable\": true}",
+  "Шаблон инбаунда для SSH установки: VLESS + Reality (XHTTP)"
+ ],
+ "step_guide_btn_back": [
+  "⬅️ На главную",
+  "Кнопка \"На главную\" в пошаговой инструкции"
+ ],
+ "sub_extra_link_active": [
+  "",
+  "Доп. VLESS ссылка: добавлять активным клиентам в тело подписки"
+ ],
+ "sub_extra_links_active": [
+  "[]",
+  "Список доп. VLESS ссылок (JSON) для активных клиентов"
+ ],
+ "sub_link_dedup_enabled": [
+  "0",
+  "Текстовая подписка: один ключ на «логическое» имя хоста (суффиксы Remnawave … 1/2/3 и [PC]/[MOBILE] учитываются). Xray JSON не затрагивается."
+ ],
+ "sub_link_dedup_mode": [
+  "random",
+  "Режим выбора ключа: random (равный шанс) или online (offline/выше порога — исключить; среди остальных — случайно, но чаще менее загруженные: вес ∝ порог − usersOnline)."
+ ],
+ "sub_link_dedup_online_interval_sec": [
+  "60",
+  "Режим online: интервал опроса /api/hosts/ и /api/nodes/ в xuiweb (сек)."
+ ],
+ "sub_link_dedup_online_threshold": [
+  "100",
+  "Режим online: не выдавать ключ, если usersOnline на привязанной ноде хоста выше порога."
+ ],
+ "sub_page_url": [
+  "https://sub.domain.ru",
+  "URL страницы подписки (для формирования ссылок на подписку)."
+ ],
+ "sub_vless_bac": [
+  "",
+  "Резервная VLESS ссылка для клиента (используется при недоступности его сервера)"
+ ],
+ "subpage_config": [
+  "{\"main\": {\"PROJECT_NAME\": \"🛡3XUIStore\", \"SUPPORT_URL\": \"https://t.me/support\", \"WEBSITE_URL\": \"https://domain.ru\", \"ANNOUNCE_TEXT\": \"🔄Чтобы всегда получать актуальный список серверов\\n🌐Приятного пользования! 💙\", \"ENABLE_COPY_KEYS\": false, \"UPDATE_INTERVAL_HOURS\": 1, \"SUBSCRIPTION_THEME\": \"subscription\", \"ALLOWED_APP_USER_AGENTS\": [], \"REQUIRE_HWID\": true, \"PLATFORM_FILTER_ENABLED\": false}, \"links\": {\"LINK_IOS\": \"https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973\", \"LINK_IOS_GLOBAL\": \"https://apps.apple.com/us/app/happ-proxy-utility/id6504287215\", \"LINK_ANDROID\": \"https://play.google.com/store/apps/details?id=com.happproxy\", \"LINK_ANDROID_APK\": \"https://github.com/Happ-proxy/happ-android/releases/latest/download/Happ.apk\", \"LINK_WINDOWS\": \"https://github.com/Happ-proxy/happ-desktop/releases/latest/download/setup-Happ.x64.exe\", \"LINK_MAC\": \"https://apps.apple.com/ru/app/happ-proxy-utility-plus/id6746188973\", \"LINK_LINUX\": \"https://github.com/Happ-proxy/happ-desktop/releases/\", \"LINK_INCY_IOS\": \"https://apps.apple.com/us/app/incy/id6756943388\", \"LINK_INCY_ANDROID\": \"https://play.google.com/store/apps/details?id=llc.itdev.incy\", \"LINK_INCY_ANDROID_APK\": \"https://github.com/INCY-DEV/incy-platforms/releases/latest/download/Incy.apk\", \"LINK_INCY_WINDOWS\": \"https://github.com/INCY-DEV/incy-platforms/releases/latest/download/incy-windows-setup.exe\", \"LINK_INCY_MAC\": \"https://github.com/INCY-DEV/incy-platforms\", \"LINK_INCY_LINUX\": \"https://github.com/INCY-DEV/incy-platforms\"}, \"headers\": {}, \"stubs\": {\"HWID\": [\"🏴 Это приложение не поддерживается\"], \"UA\": [\"🏴 Это приложение не поддерживается\"], \"BLOCKED\": [\"🏴 Вы были заблокированы\", \"🏴 Обратитесь в поддержку\"], \"DEVICE_LIMIT\": [\"🏴 Лимит устройств\", \"🏴 Был превышен\", \"🏴 Удалите лишние\", \"🏴 Устройство\"], \"EXPIRED\": [\"☹️Подписка истекла\", \"😌Продлите что бы\", \"🙂Вернуть доступ\"]}}",
+  "JSON-конфиг страницы подписки (subpage), редактируется через /settings/subpage"
+ ],
+ "subscription_currency": [
+  "RUB",
+  "Валюта подписки (например, RUB)"
+ ],
+ "subscription_days": [
+  "30",
+  "Количество дней для стандартной подписки"
+ ],
+ "subscription_price": [
+  "59",
+  "Цена стандартной подписки в рублях"
+ ],
+ "subscription_provider": [
+  "xui",
+  "Провайдер подписки по умолчанию (xui/remnawave). X-UI провайдер работает только с 3X-UI серверами. Remnawave работает совместно с 3X-UI или только Remnawave. Параметр назначается при регистрации и миграции."
+ ],
+ "subscription_theme": [
+  "lavender",
+  "Стиль страницы автоподключения:(После смены стиля нужно перезагрузить всё)"
+ ],
+ "support_custom_link": [
+  "",
+  "Кастомная ссылка поддержки (отображается над основной кнопкой поддержки). Текст кнопки редактируется ниже."
+ ],
+ "support_link": [
+  "https://t.me",
+  "Ссылка на чат поддержки (Не оставлять пустым!!!)"
+ ],
+ "telegram_proxy_url": [
+  "",
+  "Прокси для исходящих запросов бота и админки к api.telegram.org (HTTP/HTTPS/SOCKS). Пример: socks5://127.0.0.1:1080 или http://user:pass@host:8080. Пусто — без прокси."
+ ],
+ "text_about_service": [
+  "<blockquote><b>⚡️</b>Молниеносная скорость:\r\n• До 1 Гбит/с — смотрите 4K без задержек\r\n• Серверы в 🇩🇪Германии — стабильное соединение\r\n• VLESS + Reality — современный протокол</blockquote>\r\n\r\n<blockquote><b>🛡️ Максимальная защита:</b>\r\n• Никаких логов — ваша приватность под защитой\r\n• Умное шифрование — ваши данные в безопасности\r\n• Защита от утечек — полная анонимность</blockquote>\r\n\r\n<blockquote><b>✨ Почему выбирают нас:</b>\r\n• Никакой рекламы — чистый интернет\r\n• Настройка за 1 минуту — всё просто \r\n• Поддержка 24/7 — всегда на связи\r\n• Пробный период — попробуйте бесплатно\r\n• Доступная цена — качество без переплат</blockquote>",
+  "Текст для раздела \"О сервисе\". Переменная: {project_name}"
+ ],
+ "text_device_upgrade_confirm": [
+  "📱 <b>Расширение лимита устройств</b>\n\n🔄 Лимит: {old_limit} → <b>{new_limit} {new_limit_word}</b>\n📅 Срок подписки: до <b>{subscription_end_date}</b>\n💰 К оплате: <b>{price}</b> (за {days_left} {days_left_word})\n{monthly_line}\nВыберите способ оплаты:",
+  "Расширение лимита: после выбора лимита. Переменные: {old_limit}, {new_limit}, {new_limit_word}, {subscription_end_date}, {price}, {days_left}, {days_left_word}, {monthly_line}"
+ ],
+ "text_device_upgrade_payment": [
+  "💳 <b>Оплата расширения лимита</b>\n\n🔄 Лимит: {old_limit} → <b>{new_limit} {new_limit_word}</b>\n💰 К оплате: <b>{price}</b>\n\nНажмите кнопку ниже для оплаты:",
+  "Расширение лимита: экран оплаты (кнопка «Перейти к оплате» добавляется автоматически). Переменные: {old_limit}, {new_limit}, {new_limit_word}, {price}"
+ ],
+ "text_device_upgrade_reason_already_unlimited": [
+  "У вас уже безлимит по устройствам — расширять нечего.",
+  "Расширение лимита: отказ — У пользователя уже безлимит по устройствам"
+ ],
+ "text_device_upgrade_reason_feature_disabled": [
+  "Расширение лимита временно недоступно.",
+  "Расширение лимита: отказ — Функция расширения лимита выключена"
+ ],
+ "text_device_upgrade_reason_invalid_new_limit": [
+  "Некорректное значение лимита.",
+  "Расширение лимита: отказ — Некорректное значение лимита"
+ ],
+ "text_device_upgrade_reason_no_active_subscription": [
+  "У вас нет активной подписки. Сначала оформите подписку.",
+  "Расширение лимита: отказ — Нет активной подписки"
+ ],
+ "text_device_upgrade_reason_no_options": [
+  "Доступных вариантов расширения нет.",
+  "Расширение лимита: отказ — Нет доступных вариантов расширения"
+ ],
+ "text_device_upgrade_reason_no_payment_methods": [
+  "Способы оплаты временно недоступны. Попробуйте позже.",
+  "Расширение лимита: отказ — Нет доступных способов оплаты на экране расширения"
+ ],
+ "text_device_upgrade_reason_not_an_upgrade": [
+  "Новый лимит должен быть больше текущего.",
+  "Расширение лимита: отказ — Выбранный лимит не больше текущего"
+ ],
+ "text_device_upgrade_reason_over_max_limit": [
+  "Превышен максимально доступный лимит.",
+  "Расширение лимита: отказ — Достигнут максимальный лимит устройств"
+ ],
+ "text_device_upgrade_reason_too_few_days_left": [
+  "До конца подписки осталось мало дней. Сначала продлите подписку.",
+  "Расширение лимита: отказ — Мало дней до конца подписки — расширение недоступно"
+ ],
+ "text_device_upgrade_reason_user_not_found": [
+  "Профиль не найден. Перезапустите бота /start.",
+  "Расширение лимита: отказ — Профиль пользователя не найден"
+ ],
+ "text_device_upgrade_select": [
+  "📱 <b>Расширение лимита устройств</b>\n\n📊 Текущий лимит: <b>{current_limit}</b>\n📅 Подписка до: <b>{subscription_end_date}</b>\n⏳ Осталось: <b>{days_left} {days_left_word}</b>\n\nВыберите новый лимит:",
+  "Расширение лимита: выбор нового лимита. Переменные: {current_limit}, {subscription_end_date}, {days_left}, {days_left_word}"
+ ],
+ "text_error_creating_user": [
+  "🚫 Произошла ошибка при создании VPN пользователя. Пожалуйста, попробуйте позже или обратитесь в поддержку.",
+  "Ошибка создания пользователя в X-UI"
+ ],
+ "text_error_general": [
+  "⚙️ Произошла непредвиденная ошибка. Попробуйте позже.",
+  "Общая ошибка"
+ ],
+ "text_error_xui_connection": [
+  "🔌 Не удалось подключиться к VPN серверу. Пожалуйста, сообщите администратору.",
+  "Ошибка подключения к X-UI"
+ ],
+ "text_no_active_subscription": [
+  "ℹ️ У вас нет активной подписки.",
+  "Текст, если у пользователя нет активной подписки"
+ ],
+ "text_partner_program": [
+  "🤝 <b>Партнёрская программа</b>\n\n<blockquote>💰 <b>Баланс:</b> {balance_str} ₽\n📊 <b>Процент отчислений:</b> {percent}%\n👥 <b>Приглашено пользователей:</b> {ref_count}\n💳 <b>Оплат от приглашённых:</b> {pay_count}\n</blockquote>\n{link_line}\nКаждый раз когда ваш реферал оплачивает подписку — вы получаете <b>{percent}%</b> от суммы на баланс.\n\n<i>Минимальная сумма вывода: {min_withdraw} ₽</i>",
+  "Главный экран партнёрской программы. Переменные: {balance_str}, {percent}, {ref_count}, {pay_count}, {link_line}, {min_withdraw}"
+ ],
+ "text_partner_withdraw": [
+  "💸 <b>Запрос на вывод средств</b>\n\n💰 Ваш текущий баланс: <b>{balance_str} ₽</b>\n\nДля вывода средств обратитесь в поддержку, указав:\n• Ваш Telegram ID: <code>{user_id}</code>\n• Желаемую сумму вывода\n• Реквизиты для перевода",
+  "Экран «Запросить вывод» в партнёрской программе. Переменные: {balance_str}, {user_id}"
+ ],
+ "text_payment_canceled_or_failed": [
+  "❌ Оплата не удалась или была отменена. Пожалуйста, попробуйте снова или обратитесь в поддержку.",
+  "Сообщение, если платеж отменен"
+ ],
+ "text_payment_checking": [
+  "⏳ Проверяем ваш платеж...",
+  "Сообщение при проверке платежа"
+ ],
+ "text_payment_grant_failed": [
+  "✅ Оплата получена, но продлить подписку сейчас не удалось. Мы уже знаем о проблеме и исправим в ближайшее время. Если подписка так и не продлилась — обратитесь в поддержку.",
+  "Оплата прошла, но подписку выдать не удалось (Remnawave недоступна и т.п.)"
+ ],
+ "text_payment_not_found": [
+  "🤷 Платеж не найден. Убедитесь, что вы оплатили и попробуйте снова.",
+  "Сообщение, если платеж не найден"
+ ],
+ "text_payment_pending": [
+  "⏳ Платеж все еще ожидает подтверждения. Пожалуйста, подождите немного и попробуйте проверить снова.",
+  "Сообщение, если платеж в ожидании"
+ ],
+ "text_payment_prompt": [
+  "💳 Для продления подписки на {days} дней за {price} {currency}, нажмите оплатить:\r\n\r\nПосле оплаты нажмите кнопку проверить платеж или дождитесь автопроверки. ",
+  "Сообщение со ссылкой на оплату. Переменные: {days}, {price}, {currency}, {payment_url}"
+ ],
+ "text_payment_success": [
+  "✅ Оплата прошла успешно!\r\n\r\nВаша подписка на {days} дней продлена.\r\nНовая дата окончания: {expiry_date}",
+  "Сообщение об успешной оплате. Переменные: {days}, {expiry_date}, {sub_link}"
+ ],
+ "text_payment_traffic_grant_failed": [
+  "✅ Оплата получена, увеличить трафик сейчас не удалось. Мы уже знаем о проблеме и исправим в ближайшее время. Если трафик так и не увеличился — обратитесь в поддержку.",
+  "Оплата прошла, но докупку GB в Remnawave применить не удалось"
+ ],
+ "text_promo_code_already_used": [
+  "❌ Этот промокод уже был использован.",
+  "Сообщение, если промокод уже использован"
+ ],
+ "text_promo_code_invalid": [
+  "❌ Такой промокод не найден. Проверьте правильность ввода.",
+  "Сообщение о неверном промокоде"
+ ],
+ "text_promo_code_prompt": [
+  "Введите ваш промокод:",
+  "Приглашение к вводу промокода"
+ ],
+ "text_promo_code_success": [
+  "✅ Промокод <b>{code}</b> успешно активирован!\r\n\r\nВаша подписка продлена на {days} дней.\r\nНовая дата окончания: {expiry_date}",
+  "Сообщение об успешной активации промокода. Переменные: {code}, {days}, {expiry_date}"
+ ],
+ "text_ref_bonus_on_join": [
+  "🎉 Спасибо, что пригласили друга! Вам начислено {days} дня в подарок. После первого платежа друга вы получите ещё бонус!",
+  "Текст для пригласившего при регистрации друга. Переменная: {days}"
+ ],
+ "text_ref_bonus_on_payment": [
+  "🎉 Ваш друг оплатил подписку! Вам начислено {days} дней бонуса.",
+  "Текст для пригласившего при первом платеже друга. Переменная: {days}"
+ ],
+ "text_referral_program": [
+  "<b>🎁 Пригласи друга!</b>\r\n\r\nПригласите друзей и получайте бонусы!\r\n\r\n<blockquote><b>Ваша реферальная ссылка:</b>\r\n<code>{ref_link}</code></blockquote>\r\n\r\n<blockquote><b>Бонусы:</b>\r\n +{join_days} дня за регистрацию друга по вашей ссылке\r\n+{payment_days} дней за первый платёж друга</blockquote>\r\n\r\n<b>Приглашения сегодня:</b> {used_invites}/{max_per_day} (осталось: {remaining_invites})\r\n\r\nБонусы начисляются автоматически!",
+  "Текст реферальной программы"
+ ],
+ "text_referral_share": [
+  "Присоединяйся!",
+  "Текст для кнопки Поделиться в реферальной программе (можно использовать {ref_link})"
+ ],
+ "text_remnawave_traffic_exhausted": [
+  "⚠️ <b>Трафик закончился</b>\n\n📊 Использовано: {used_gb:.2f} GB из {limit_gb:.2f} GB\n\nБезлимитные серверы все равно доступны.\n\nДля продолжения пользования:\n• Докупите GB\n• Продлите подписку\n\nДля продления вернитесь на главную.",
+  "Текст сообщения об окончании трафика Remnawave. Переменные: {used_gb} - использовано GB, {limit_gb} - лимит GB"
+ ],
+ "text_subscription_expired": [
+  "😱 Ой-ой, подписка приказала долго жить!\r\n  \r\nНо не спеши хоронить все плюшки — вот волшебные кнопки ниже👇\r\n\r\n<i>P.S. Без VPN ты как секретный агент с паспортом на виду.</i> 🕵️‍♂️📖 . 😄",
+  "Текст, который получит пользователь, когда его подписка истечет"
+ ],
+ "text_subscription_expired_main": [
+  "😱 Ой-ой, подписка приказала долго жить!⛔❗\r\n    \r\nНо не спеши хоронить все плюшки — вот волшебные кнопки ниже👇\r\n  \r\n<blockquote><i>P.S. Без VPN ты как секретный агент с паспортом на виду.</i> 🕵️‍♂️📖 . 😄</blockquote>",
+  "Текст на главном экране, когда подписка истекла"
+ ],
+ "text_subscription_expiring": [
+  "⏰ Ваша подписка заканчивается завтра! можете продлить по кнопке ниже👋",
+  "Напоминание о скором завершении подписки"
+ ],
+ "text_subscription_info": [
+  "<blockquote>📌Ваша подписка:\r\nСтатус: <b>{status}</b>\r\nДействует до: <code>{expiry_date}</code>\r\nЛимит устройств: <b>{limit_ip}</b></blockquote>",
+  "Информация об активной подписке. Переменные: {status}, {expiry_date}, {sub_link}"
+ ],
+ "text_subscription_revoke": [
+  "⚠️ <b>Данные для подключения вашей подписки были сброшены</b>\n\nЭто могло произойти из-за:\n• Нарушения правил сервиса\n• Вашего запроса на сброс\n\n🔑 <b>Новые данные для подключения готовы</b>\n📱 Лимит устройств и срок подписки не изменились\n📊 Использованный трафик сохранён\n\n⚠️ <b>Важно:</b> После добавления новой подписки обязательно удалите старую подписку из вашего клиента.\n\nНажмите кнопку ниже, чтобы получить новые данные для подключения.",
+  "Сообщение пользователю после «Сбросить подписку» (кнопка «Подключиться» добавляется автоматически)"
+ ],
+ "text_support": [
+  "💬 <b>Поддержка</b>\n\nДля того, чтобы мы быстро вас нашли, скопируйте ваш ID заранее и отправьте в поддержку с проблемой, которая у вас случилась.\n\n📋 <b>Ваш ID для копирования:</b>\n\n<blockquote>{user_id}</blockquote>\n\n👇 Нажмите на текст выше, чтобы скопировать ваш ID, затем перейдите в поддержку.",
+  "Текст страницы поддержки. Используйте {user_id} для отображения ID пользователя"
+ ],
+ "text_traffic_renewal_confirm": [
+  "📈 <b>Докупить гигабайты</b>\n\n📦 <b>Выбранный тариф:</b> {tariff_name}\n➕ <b>Будет добавлено:</b> {tariff_gb} GB\n📊 <b>Новый лимит:</b> {new_traffic_limit_gb} GB\n\n💰 <b>Стоимость:</b> {price} ₽\n\n💳 <b>Выберите способ оплаты:</b>",
+  "Докупка трафика: после выбора тарифа. Переменные: {tariff_name}, {tariff_gb}, {new_traffic_limit_gb}, {price}"
+ ],
+ "text_traffic_renewal_payment": [
+  "💳 <b>Оплата продления трафика</b>\n\n➕ <b>Будет добавлено:</b> {traffic_gb} GB\n💰 <b>Стоимость:</b> {price} {currency}\n\nНажмите кнопку оплаты ниже, чтобы перейти к оплате.\n\n<blockquote>⏰ Ваш успешный платеж будет обработан до 5 минут</blockquote>",
+  "Докупка трафика: единый экран оплаты для всех провайдеров (кнопка оплаты добавляется автоматически). Переменные: {traffic_gb}, {price}, {currency}"
+ ],
+ "text_traffic_renewal_select": [
+  "📈 <b>Докупить гигабайты</b>{traffic_info}\n\n💳 <b>Выберите тариф:</b>",
+  "Докупка трафика: выбор тарифа. Переменная {traffic_info} — блок текущего трафика (может быть пустым)"
+ ],
+ "text_trial_already_used": [
+  "😔 Ваша подписка закончилась, продлите по кнопке ниже ⬇️",
+  "Текст, если пробный период использован, а подписки нет"
+ ],
+ "text_trial_success": [
+  "<b>Добро пожаловать!</b> 👋\r\n\r\n📍Мы активировали для вас пробный доступ к VPN на <b>{days} дня</b>. Спасибо, что выбрали нас!\r\n\r\nПодключиться очень просто:\r\n<blockquote>Нажмите:<b>\"🔗 Подключиться\"</b> ниже, чтобы мгновенно получить доступ.</blockquote>",
+  "Сообщение об успешном создании триала. Переменные: {days}, {sub_link}, {expiry_date}"
+ ],
+ "text_website_cabinet_active": [
+  "🌐 <b>Личный кабинет</b>\n\n<b>В кабинете вы можете:</b>\n<i>• 💳 Оплатить или продлить подписку\n• 🔑 Получить ключ подключения\n• 📊 Следить за трафиком и сроком\n• 📱 Управлять устройствами</i>\n\nНажмите кнопку ниже — вы войдёте автоматически.\n<i>Ссылка действует 10 минут.</i>",
+  "Личный кабинет: email привязан, подписка активна (кнопка «Открыть кабинет» добавляется автоматически)"
+ ],
+ "text_website_cabinet_expired": [
+  "🌐 <b>Личный кабинет</b>\n\n❌ У вас закончилась подписка — продлите для полного доступа к личному кабинету.\n\nНажмите кнопку ниже — вы войдёте автоматически.\n<i>Ссылка действует 10 минут.</i>",
+  "Личный кабинет: подписка истекла (кнопки «Открыть кабинет» и «Продлить» добавляются автоматически)"
+ ],
+ "text_website_cabinet_no_email": [
+  "🌐 <b>Личный кабинет</b>\n\n<blockquote>⚠️ <b>Необходима привязка Email</b>\nДля доступа к сайту и сохранения вашей подписки, пожалуйста, привяжите адрес электронной почты.</blockquote>\n\n<i>Альтернативный доступ к подписке если Telegram не работает.</i>",
+  "Личный кабинет: email не привязан (кнопка «Привязать email» добавляется автоматически)"
+ ],
+ "text_welcome_message": [
+  "🙋Привет, {user_name}! \r\n\r\n<b>{project_name}</b> – включил и забыл.  \r\n\r\n🇩🇪 <b>Германия</b> | 🇫🇮 <b>Финляндия</b>\r\n✅ Доступные тарифы\r\n🚀 Мгновенная активация",
+  "Приветственное сообщение для новых пользователей. Переменные: {user_name}, {project_name}"
+ ],
+ "tgstar_provider_token": [
+  "",
+  "Provider token для оплаты через Telegram (TG Star)"
+ ],
+ "tgstar_rub_per_star": [
+  "2.0",
+  "Курс TG Stars: сколько ₽ за 1 ⭐. Используется для конвертации рублёвых тарифов в звёзды при создании инвойса. Пример: при 2.0 — тариф 1000 ₽ → 500 ⭐."
+ ],
+ "traffic_renewal_enabled": [
+  "0",
+  "Включить платное продление трафика для Remnawave (0/1)"
+ ],
+ "traffic_reset_enabled": [
+  "0",
+  "Включить платный сброс трафика для Remnawave (0/1)"
+ ],
+ "traffic_reset_price_rub": [
+  "50",
+  "Цена сброса трафика в рублях"
+ ],
+ "trial_days": [
+  "3",
+  "Количество дней для пробного периода"
+ ],
+ "trial_limit_ip": [
+  "1",
+  "Лимит устройств при пробном периоде (0 = без лимита)"
+ ],
+ "wata_access_token": [
+  "",
+  "Wata: Access Token (Bearer JWT из ЛК терминала; см. ENV WATA_ACCESS_TOKEN)"
+ ],
+ "wata_terminal_public_id": [
+  "",
+  "Wata: Terminal Public ID (UUID терминала; виджет, см. ENV WATA_TERMINAL_PUBLIC_ID)"
+ ],
+ "web_2ip_token": [
+  "",
+  "Токен API 2ip.ru для обогащения сведений об IP (опционально)"
+ ],
+ "web_admin_port": [
+  "8181",
+  "Порт для веб-админки"
+ ],
+ "web_admin_secret_key": [
+  "",
+  "Секретный ключ для сессий веб-админки (base64)"
+ ],
+ "web_page_link": [
+  "https://t.me/",
+  "Ссылка на веб-страницу для Happ клиента"
+ ],
+ "web_privacy_policy_link": [
+  "",
+  "Ссылка на Политику конфиденциальности (кнопка в О сервисе)"
+ ],
+ "web_user_agreement_link": [
+  "",
+  "Ссылка на Пользовательское соглашение (кнопка в О сервисе)"
+ ],
+ "website_cabinet_config": [
+  "{\"email_whitelist_enabled\": false, \"email_allow_existing_users\": false, \"email_allowed_domains\": []}",
+  "JSON-настройки веб-кабинета (website), /settings/website-cabinet"
+ ],
+ "xray_balancer_auto_exclude": [
+  "",
+  "Исключения из 🇪🇺 AUTO: подстроки в имени хоста (через запятую). Россия 🇷🇺 исключается всегда."
+ ],
+ "xray_balancer_auto_group_name": [
+  "🇪🇺 AUTO | Самые быстрые",
+  "Название группы AUTO в Happ (remarks конфига)."
+ ],
+ "xray_balancer_dns_query_strategy": [
+  "UseIP",
+  "dns.queryStrategy в JSON: AsIs, UseIP, UseIPv4 или UseIPv6."
+ ],
+ "xray_balancer_dns_servers": [
+  "1.1.1.1,1.0.0.1",
+  "DNS-серверы в JSON конфиге балансировщика (через запятую). Перезаписывают servers из шаблона Remnawave."
+ ],
+ "xray_balancer_domain_strategy": [
+  "IPIfNonMatch",
+  "routing.domainStrategy во всех JSON-конфигах балансировщика (AsIs / IPIfNonMatch / IPOnDemand)."
+ ],
+ "xray_balancer_enabled": [
+  "0",
+  "Пересборка Xray JSON: группы стран, AUTO и failover между серверами. Хосты и их имена настраиваются в Remnawave. Требует JSON-подписку."
+ ],
+ "xray_balancer_load_expected": [
+  "3",
+  "expected: сколько лучших серверов держать в пуле leastLoad/leastPing."
+ ],
+ "xray_balancer_lte_auto_group_name": [
+  "🇷🇺 LTE AUTO | Самые быстрые",
+  "Название группы LTE AUTO — все хосты с LTE в имени."
+ ],
+ "xray_balancer_lte_baseline_ms": [
+  "1500",
+  "Fallback baseline (мс) для 2-го и следующих триггеров без :мс в списке LTE-триггеров."
+ ],
+ "xray_balancer_lte_minus_baseline_ms": [
+  "2800",
+  "Fallback baseline (мс) для 3-го триггера без :мс в списке LTE-триггеров."
+ ],
+ "xray_balancer_lte_plus_baseline_ms": [
+  "900",
+  "Fallback baseline (мс) для 1-го триггера без :мс в списке LTE-триггеров."
+ ],
+ "xray_balancer_lte_triggers": [
+  "LTE",
+  "LTE-триггеры и baseline: LTE:900, MOBILE:1500 (порядок = приоритет каскада). Без :мс — fallback из полей LTE+/LTE/LTE- ниже."
+ ],
+ "xray_balancer_main_lte_baseline_ms": [
+  "500",
+  "RTT baseline (мс) для main-балансера в группе с LTE-fallback."
+ ],
+ "xray_balancer_max_users_per_cpu": [
+  "80",
+  "Порог нагрузки: макс. онлайн-пользователей на 1 CPU ноды."
+ ],
+ "xray_balancer_max_users_per_gb": [
+  "50",
+  "Порог нагрузки: макс. онлайн-пользователей на 1 GB RAM ноды."
+ ],
+ "xray_balancer_mode": [
+  "full",
+  "Режим балансировки: full — все группы пересобираются; auto_only — только AUTO и LTE AUTO, остальное от Remnawave."
+ ],
+ "xray_balancer_node_load_threshold": [
+  "1.0",
+  "Нормализованный load выше этого значения — сервер исключается из подписки."
+ ],
+ "xray_balancer_node_stats_enabled": [
+  "0",
+  "Не отдавать в балансировщик серверы на перегруженных или offline-нодах Remnawave."
+ ],
+ "xray_balancer_node_stats_interval_sec": [
+  "120",
+  "Интервал опроса Remnawave /api/nodes/ (секунды)."
+ ],
+ "xray_balancer_probe_interval": [
+  "3m",
+  "Интервал опроса серверов burstObservatory (например 3m, 1m)."
+ ],
+ "xray_balancer_probe_sampling": [
+  "3",
+  "Число проб ping на каждый сервер за интервал."
+ ],
+ "xray_balancer_probe_timeout": [
+  "3s",
+  "Таймаут одной пробы ping (например 3s)."
+ ],
+ "xray_balancer_probe_url": [
+  "https://www.gstatic.com/generate_204",
+  "URL для burstObservatory ping (проверка доступности серверов)."
+ ],
+ "xray_balancer_routing_config": [
+  "{}",
+  "JSON: правила routing (block / proxy / direct) для балансировщика xuiweb."
+ ],
+ "xray_balancer_routing_enabled": [
+  "0",
+  "Свои правила routing (block / proxy / direct) вместо шаблона Remnawave. Требует умную балансировку."
+ ],
+ "xray_balancer_single_baseline_ms": [
+  "800",
+  "RTT baseline (мс) для группы без LTE (одна страна)."
+ ],
+ "xray_balancer_strategy": [
+  "leastLoad",
+  "Стратегия Xray balancer: leastLoad, random, roundRobin или leastPing."
+ ],
+ "xray_balancer_tolerance": [
+  "0.5",
+  "Tolerance основного балансера (main): насколько хуже ping допустим без переключения."
+ ],
+ "xray_balancer_tolerance_fallback": [
+  "0.8",
+  "Tolerance резервных балансеров (LTE, all, одиночная группа)."
+ ],
+ "xray_json_client_happ": [
+  "1",
+  "Отдавать JSON подписку клиенту Happ (User-Agent содержит happ)."
+ ],
+ "xray_json_client_incy": [
+  "1",
+  "Отдавать JSON подписку клиенту INCY (User-Agent содержит incy)."
+ ],
+ "xray_json_client_v2raytun": [
+  "1",
+  "Отдавать JSON подписку клиенту v2raytun (User-Agent содержит v2raytun)."
+ ],
+ "xray_json_enabled": [
+  "0",
+  "Включить Xray JSON формат подписки"
+ ],
+ "xray_json_template": [
+  "{\n  \"remarks\": \"{remarks}\",\n  \"log\": {\n    \"loglevel\": \"warning\"\n  },\n  \"inbounds\": [\n    {\n      \"port\": 10808,\n      \"listen\": \"127.0.0.1\",\n      \"protocol\": \"socks\",\n      \"sniffing\": {\n        \"enabled\": true,\n        \"destOverride\": [\n          \"http\",\n          \"tls\"\n        ]\n      },\n      \"settings\": {\n        \"auth\": \"noauth\",\n        \"udp\": true\n      },\n      \"tag\": \"socks-in\"\n    },\n    {\n      \"port\": 10809,\n      \"listen\": \"127.0.0.1\",\n      \"protocol\": \"http\",\n      \"tag\": \"http-in\"\n    }\n  ],\n  \"outbounds\": [\n    {\n      \"tag\": \"__PROXY__\"\n    },\n    {\n      \"tag\": \"direct\",\n      \"protocol\": \"freedom\",\n      \"settings\": {}\n    },\n    {\n      \"tag\": \"block\",\n      \"protocol\": \"blackhole\",\n      \"settings\": {}\n    }\n  ],\n  \"routing\": {\n    \"domainStrategy\": \"IPIfNonMatch\",\n    \"rules\": [\n      {\n        \"type\": \"field\",\n        \"ip\": [\n          \"geoip:private\"\n        ],\n        \"outboundTag\": \"direct\"\n      },\n      {\n        \"type\": \"field\",\n        \"network\": \"tcp,udp\",\n        \"outboundTag\": \"proxy\"\n      }\n    ]\n  }\n}",
+  "Шаблон Xray JSON конфига"
+ ],
+ "xui_servers": [
+  "[]",
+  "JSON конфигурация серверов X-UI. ВАЖНО: соблюдайте синтаксис JSON!"
+ ],
+ "yookassa_sbp_only": [
+  "0",
+  "YooKassa: принимать только СБП (выкл/вкл)"
+ ],
+ "yookassa_secret_key": [
+  "",
+  "Секретный ключ магазина Yookassa"
+ ],
+ "yookassa_shop_id": [
+  "",
+  "ID магазина в Yookassa"
+ ],
+ "yoomoney_account": [
+  "",
+  "Номер счета YooMoney для приема платежей"
+ ],
+ "yoomoney_notification_secret": [
+  "",
+  "Секретный ключ для верификации webhook уведомлений YooMoney"
+ ],
+ "yoomoney_token": [
+  "",
+  "API токен для YooMoney"
+ ]
+}
