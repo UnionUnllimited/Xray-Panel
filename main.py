@@ -1205,6 +1205,17 @@ async def process_successful_payment(telegram_user_id: int, payment_id: str, pay
         await _notify_payment_grant_failed(telegram_user_id)
         return False
 
+def _trial_enabled() -> bool:
+    """Пробный период выключается настройкой trial_days=0.
+
+    Без этой проверки бот всё равно шёл по пути выдачи триала, показывал
+    «Активация на 0 дн...» и экран замирал вместо главного меню.
+    """
+    try:
+        return int(app_conf.get('trial_days', 3) or 0) > 0
+    except (TypeError, ValueError):
+        return False
+
 async def show_main_menu(message_or_query: Message | CallbackQuery, edit_message: bool = False):
     user_id = message_or_query.from_user.id
     user_name = (message_or_query.from_user.first_name or "")[:32]
@@ -1309,7 +1320,11 @@ async def show_main_menu(message_or_query: Message | CallbackQuery, edit_message
          # Показываем стандартный текст для пользователей без активной подписки
          text_to_send += "\n\n" + app_conf.get('text_subscription_expired_main')
     elif not is_trial_used and not has_active_sub:
-        text_to_send += "\n\n" + "🎁 Вы можете получить пробный период, если еще не использовали его, или приобрести подписку."
+        # Триал выключен — не предлагаем его: клиент нажмёт и ничего не получит.
+        if _trial_enabled():
+            text_to_send += "\n\n" + "🎁 Вы можете получить пробный период, если еще не использовали его, или приобрести подписку."
+        else:
+            text_to_send += "\n\n" + "Выберите раздел ниже или напишите в поддержку."
 
     target_message = message_or_query.message if isinstance(message_or_query, CallbackQuery) else message_or_query
     
@@ -1597,6 +1612,10 @@ async def handle_start(message: Message, state: FSMContext):
                     
                     # Показываем последовательность прогресса
                     # Выдаем триал
+                    if not _trial_enabled():
+                        await show_main_menu(message)
+                        return
+
                     trial_days = app_conf.get('trial_days', 3)
                     trial_limit_ip = app_conf.get('trial_limit_ip', 1)
 
@@ -1740,8 +1759,12 @@ async def handle_start(message: Message, state: FSMContext):
                     logger.info(f"[HANDLER] handle_start: триал не выдан повторно для user_id={user_id} (double-check: active_sub={bool(active_sub_check3)}, is_trial_used={is_trial_used_check3})")
                     await show_main_menu(message)
                     return
-                
+
                 # Выдаем триал
+                if not _trial_enabled():
+                    await show_main_menu(message)
+                    return
+
                 trial_days = app_conf.get('trial_days', 3)
                 trial_limit_ip = app_conf.get('trial_limit_ip', 1)
 
@@ -1930,6 +1953,10 @@ async def handle_captcha_answer(query: CallbackQuery, state: FSMContext):
                 pass
             
             # Показываем прогресс ДО создания клиента
+            if not _trial_enabled():
+                await show_main_menu(query, edit_message=True)
+                return
+
             trial_days = app_conf.get('trial_days', 3)
             await show_trial_progress_edit(query.message, trial_days)
             trial_limit_ip = app_conf.get('trial_limit_ip', 1)
@@ -2234,7 +2261,19 @@ async def check_subscription_callback(query: CallbackQuery, state: FSMContext):
                 pass
             logger.info(f"[HANDLER] check_subscription_callback: триал не выдан повторно для user_id={user_id} (active_sub={bool(active_sub)}, is_trial_used={is_trial_used_now})")
             return
-        
+
+        if not _trial_enabled():
+            try:
+                await query.answer("✅ Спасибо за подписку!")
+            except Exception:
+                pass
+            try:
+                await state.clear()
+            except Exception:
+                pass
+            await show_main_menu(query, edit_message=True)
+            return
+
         # Пользователь подписан и может получить триал - выдаем триал
         try:
             await query.answer("✅ Спасибо за подписку! Создаем подписку...")
@@ -6625,7 +6664,10 @@ async def api_grant_trial(request: web.Request):
             return web.json_response({'ok': False, 'error': 'Неверный user_id'}, status=400)
 
         # Читаем настройки триала из app_conf (те же что использует бот)
-        trial_days = int(app_conf.get('trial_days', 3) or 3)
+        # «or 3» превращал числовой ноль в 3 дня — триал выдавался, хотя выключен.
+        if not _trial_enabled():
+            return web.json_response({'ok': False, 'error': 'Триал отключён'}, status=400)
+        trial_days = int(app_conf.get('trial_days', 3))
         trial_limit_ip = int(app_conf.get('trial_limit_ip', 1) or 1)
 
         if trial_days <= 0:

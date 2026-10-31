@@ -23,7 +23,7 @@ from quart import Response, current_app, request, url_for
 
 # Версия кэша SW. При деплое НОВОЙ версии бампайте здесь — тогда старый
 # Service Worker удалит свой кэш и подхватит свежие CSS/JS.
-PWA_CACHE_VERSION = 'v3.9.5'
+PWA_CACHE_VERSION = 'v3.11.285'
 
 # Дефолт на случай, если в БД ещё не заполнен project_name.
 PWA_APP_NAME_FALLBACK = 'Панель'
@@ -173,7 +173,7 @@ self.addEventListener('activate', (event) => {{
 const isStaticAsset = (url) => {{
   if (!url.pathname.startsWith(SCOPE)) return false;
   const sub = url.pathname.slice(SCOPE.length);
-  return sub.startsWith('static/');
+  return sub.startsWith('static/') || sub.startsWith('admin-static/');
 }};
 
 // Утилита: navigate-запрос (переход по ссылке/перезагрузка).
